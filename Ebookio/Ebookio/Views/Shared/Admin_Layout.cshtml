@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/assets/images/favicon.ico">
+    <!-- Bootstrap Css -->
+    <link href="~/assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="~/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+
+
+    <script src="~/assets/js/pages/alerts.init.js"></script>
+    <script src="~/assets/js/pages/apexcharts.init.js"></script>
+    <script src="~/assets/js/pages/auth-2-carousel.init.js"></script>
+    <script src="~/assets/js/pages/bootstrap-toastr.init.js"></script>
+    <script src="~/assets/js/pages/calendar.init.js"></script>
+    <script src="~/assets/js/pages/calendars-full.init.js"></script>
+    <script src="~/assets/js/pages/calendars.js"></script>
+    <script src="~/assets/js/pages/chartjs.init.js"></script>
+    <script src="~/assets/js/pages/coming-soon.init.js"></script>
+    <script src="~/assets/js/pages/crypto-dashboard.init.js"></script>
+    <script src="~/assets/js/pages/crypto-exchange.init.js"></script>
+    <script src="~/assets/js/pages/crypto-kyc-app.init.js"></script>
+    <script src="~/assets/js/pages/crypto-orders.init.js"></script>
+    <script src="~/assets/js/pages/crypto-wallet.init.js"></script>
+    <script src="~/assets/js/pages/dashboard-blog.init.js"></script>
+    <script src="~/assets/js/pages/dashboard.init.js"></script>
+    <script src="~/assets/js/pages/datatables.init.js"></script>
+    <script src="~/assets/js/pages/echarts.init.js"></script>
+    <script src="~/assets/js/pages/ecommerce-cart.init.js"></script>
+    <script src="~/assets/js/pages/ecommerce-select2.init.js"></script>
+    <script src="~/assets/js/pages/email-editor.init.js"></script>
+    <script src="~/assets/js/pages/file-manager.init.js"></script>
+    <script src="~/assets/js/pages/flot.init.js"></script>
+    <script src="~/assets/js/pages/fontawesome.init.js"></script>
+    <script src="~/assets/js/pages/form-advanced.init.js"></script>
+    <script src="~/assets/js/pages/form-editor.init.js"></script>
+    <script src="~/assets/js/pages/form-mask.init.js"></script>
+    <script src="~/assets/js/pages/form-repeater.int.js"></script>
+    <script src="~/assets/js/pages/form-validation.init.js"></script>
+    <script src="~/assets/js/pages/form-wizard.init.js"></script>
+    <script src="~/assets/js/pages/form-xeditable.init.js"></script>
+    <script src="~/assets/js/pages/gmaps.init.js"></script>
+    <script src="~/assets/js/pages/ico-landing.init.js"></script>
+    <script src="~/assets/js/pages/jquery-knob.init.js"></script>
+    <script src="~/assets/js/pages/leaflet-map.init.js"></script>
+    <script src="~/assets/js/pages/leaflet-us-states.js"></script>
+    <script src="~/assets/js/pages/lightbox.init.js"></script>
+    <script src="~/assets/js/pages/materialdesign.init.js"></script>
+    <script src="~/assets/js/pages/modal.init.js"></script>
+    <script src="~/assets/js/pages/product-filter-range.init.js"></script>
+    <script src="~/assets/js/pages/profile.init.js"></script>
+    <script src="~/assets/js/pages/project-overview.init.js"></script>
+    <script src="~/assets/js/pages/range-sliders.init.js"></script>
+    <script src="~/assets/js/pages/rating-init.js"></script>
+    <script src="~/assets/js/pages/saas-dashboard.init.js"></script>
+    <script src="~/assets/js/pages/schedules.js"></script>
+    <script src="~/assets/js/pages/session-timeout.init.js"></script>
+    <script src="~/assets/js/pages/sparklines.init.js"></script>
+    <script src="~/assets/js/pages/sweet-alerts.init.js"></script>
+    <script src="~/assets/js/pages/table-editable.int.js"></script>
+    <script src="~/assets/js/pages/table-responsive.init.js"></script>
+    <script src="~/assets/js/pages/task-create.init.js"></script>
+    <script src="~/assets/js/pages/task-form.init.js"></script>
+    <script src="~/assets/js/pages/task-kanban.init.js"></script>
+    <script src="~/assets/js/pages/tasklist.init.js"></script>
+    <script src="~/assets/js/pages/timeline.init.js"></script>
+    <script src="~/assets/js/pages/toastr.init.js"></script>
+    <script src="~/assets/js/pages/tui-charts.init.js"></script>
+    <script src="~/assets/js/pages/two-step-verification.init.js"></script>
+    <script src="~/assets/js/pages/validation.init.js"></script>
+    <script src="~/assets/js/pages/vector-maps.init.js"></script>
+</head>
+<body>
+    <header id="page-topbar">
+        <div class="navbar-header">
+            <div class="d-flex">
+                <!-- LOGO -->
+                <div class="navbar-brand-box">
+                    <a href="index.html" class="logo logo-dark">
+                        <span class="logo-sm">
+                            <img src="~/assets/images/logo.svg" alt="" height="22">
+                        </span>
+                        <span class="logo-lg">
+                            <img src="~/assets/images/logo-dark.png" alt="" height="17">
+                        </span>
+                    </a>
+                </div>
+
+                <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect" id="vertical-menu-btn">
+                    <i class="fa fa-fw fa-bars"></i>
+                </button>
+
+                <!-- App Search-->
+                <form class="app-search d-none d-lg-block">
+                    <div class="position-relative">
+                        <input type="text" class="form-control" placeholder="Search...">
+                        <span class="bx bx-search-alt"></span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="d-flex">
+
+                <div class="dropdown d-inline-block d-lg-none ms-2">
+                    <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="mdi mdi-magnify"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                         aria-labelledby="page-header-search-dropdown">
+
+                        <form class="p-3">
+                            <div class="form-group m-0">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="dropdown d-none d-lg-inline-block ms-1">
+                    <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="fullscreen">
+                        <i class="bx bx-fullscreen"></i>
+                    </button>
+                </div>
+
+
+                <div class="dropdown d-inline-block">
+                    <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <span class="d-none d-xl-inline-block ms-1" key="t-henry">@Session["admin_username"]</span>
+                    </button>
+                </div>
+
+                <div class="dropdown d-inline-block">
+                    <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect" id="page-header-user-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bx bx-cog bx-spin"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <!-- item-->
+                        <a class="dropdown-item" href="#"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Profile</span></a>
+                        <a class="dropdown-item" href="#"><i class="bx bx-wallet font-size-16 align-middle me-1"></i> <span key="t-my-wallet">My Wallet</span></a>
+                        <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end">11</span><i class="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></a>
+                        <a class="dropdown-item" href="#"><i class="bx bx-lock-open font-size-16 align-middle me-1"></i> <span key="t-lock-screen">Lock screen</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="/Admin/AdminLogOut"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Logout</span></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <!-- ========== Left Sidebar Start ========== -->
+    <div class="vertical-menu">
+
+        <div data-simplebar class="h-100">
+
+            <!--- Sidemenu -->
+            <div id="sidebar-menu">
+                <!-- Left Menu Start -->
+                <ul class="metismenu list-unstyled" id="side-menu">
+                    <li class="menu-title" key="t-menu">Menu</li>
+
+                    <li>
+                        <a href="/Admin/AdminDashboard" class="waves-effect">
+                            <i class="bx bx-home-circle"></i>
+                            <span key="t-dashboards">Dashboards</span>
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a href="/Publisher/ViewPublisher" class="waves-effect">
+                            <i class="bx bx-chat"></i>
+                            <span key="t-chat">Publisher</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            <!-- Sidebar -->
+        </div>
+    </div>
+    <!-- Left Sidebar End -->
+    <div class="main-content">
+
+        <div class="page-content">
+            <div class="container-fluid">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <script>document.write(new Date().getFullYear())</script> © Lotha.
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end d-none d-sm-block">
+                        Design & Develop by LothaEducation
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
