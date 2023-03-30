@@ -1,6 +1,7 @@
 ﻿using Ebookio.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -77,5 +78,94 @@ namespace Ebookio.Controllers
             Session.Abandon();
             return RedirectToAction("AdminLogin");
         }
+
+        //--------------------------------------------------------------------------------------------
+        //----------------------------------------------publisher--------------------------------------
+        //--------------------------------------------------------------------------------------------
+
+        public ActionResult Publisher()
+        {
+            ViewBag.msg = TempData["msg"] as string;
+            //ViewBag.message1 = TempData["message1"] as string; 
+            // ViewBag.insertmsg = TempData["insertmsg"] as string;
+            // ViewBag.deletemsg = TempData["deletemsg"] as string;
+            //ViewBag.updatemsg = TempData["updatemsg"] as string;
+            using (var ctx = new ebookioEntities())
+            {
+
+                var publisherlist = ctx.tbl_publisher.SqlQuery("Select * from tbl_publisher").ToList<tbl_publisher>();
+                return View(publisherlist);
+
+            }
+          
+        }
+        public ActionResult AddPublisher()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult AddPublisher(tbl_publisher pmodel)
+        {
+            if(ModelState.IsValid==true)
+            {
+                tbl_publisher p = new tbl_publisher();
+                if (eobj.tbl_publisher.Any(model=>model.publisher_name.Equals(pmodel.publisher_name)))
+                {
+                    ViewBag.errormsg = "Pulisher Name Already Use..!!";
+                }
+                else
+                {
+                    p.publisher_name = pmodel.publisher_name;
+                    eobj.tbl_publisher.Add(p);
+                    eobj.SaveChanges();
+                    // TempData["insertmsg"] = "Successfuly Inserted !!!";
+                    TempData["msg"] = "Successfuly Inserted !!!";
+                    return RedirectToAction("Publisher");
+                }
+                
+              
+            }
+            return View();
+        }
+        public ActionResult DeletePublisher(int deleteid)
+        {
+            var deleterecord = eobj.tbl_publisher.Where(x => x.publisher_id == deleteid).First();
+            eobj.tbl_publisher.Remove(deleterecord);
+            eobj.SaveChanges();
+            // TempData["msg"] = "Successfuly Deleted !!!";
+            //TempData["message1"] = "Delete Record Successfully";
+            var list = eobj.tbl_publisher.ToList();
+            return View("Publisher",list);
+        }
+        public ActionResult EditPublisher(int publisher_id)
+        {
+            var row = eobj.tbl_publisher.Where(x=>x.publisher_id == publisher_id).FirstOrDefault();
+            return View(row);
+        }
+        [HttpPost]
+        public ActionResult EditPublisher(tbl_publisher pmodel)
+        {
+            if(ModelState.IsValid==true)
+            {
+                if (eobj.tbl_publisher.Any(model => model.publisher_name.Equals(pmodel.publisher_name)))
+                {
+                    ViewBag.errormsg = "Pulisher Name Already Use..!!";
+                }
+                else
+                {
+                    tbl_publisher p = new tbl_publisher();
+                    p.publisher_id = pmodel.publisher_id;
+                    p.publisher_name = pmodel.publisher_name;
+                    eobj.Entry(p).State = EntityState.Modified;
+                    eobj.SaveChanges();
+                    //  TempData["updatemsg"] = "Successfuly Updated !!!";
+                    TempData["msg"] = "Successfuly Updated !!!";
+                    return RedirectToAction("Publisher");
+                }
+              
+            }
+            return View();
+        }
+
     }
 }

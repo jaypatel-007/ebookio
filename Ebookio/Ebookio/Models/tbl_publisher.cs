@@ -11,10 +11,15 @@ namespace Ebookio.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+
     public partial class tbl_publisher
     {
         public int publisher_id { get; set; }
+        [Required(ErrorMessage ="Please Enter Publisher Name")]
+        [DisplayName("Publisher Name")]
+        [RegularExpression("[A-Za-z ]*", ErrorMessage = "Enter only alphabets Allows..!")]
         public string publisher_name { get; set; }
     }
 }
