@@ -20,5 +20,13 @@
   <EntityContainer Name="ebookioEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="tbl_admin" EntityType="Self.tbl_admin" />
     <EntitySet Name="tbl_publisher" EntityType="Self.tbl_publisher" />
+    <EntitySet Name="tbl_language" EntityType="ebookioModel.tbl_language" />
   </EntityContainer>
+  <EntityType Name="tbl_language">
+    <Key>
+      <PropertyRef Name="language_id" />
+    </Key>
+    <Property Name="language_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="language_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
 </Schema>

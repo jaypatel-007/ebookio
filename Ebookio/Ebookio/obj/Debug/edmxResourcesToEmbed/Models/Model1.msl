@@ -20,5 +20,13 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="tbl_language">
+      <EntityTypeMapping TypeName="ebookioModel.tbl_language">
+        <MappingFragment StoreEntitySet="tbl_language">
+          <ScalarProperty Name="language_name" ColumnName="language_name" />
+          <ScalarProperty Name="language_id" ColumnName="language_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

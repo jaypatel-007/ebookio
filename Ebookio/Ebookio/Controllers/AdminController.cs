@@ -85,87 +85,253 @@ namespace Ebookio.Controllers
 
         public ActionResult Publisher()
         {
-            ViewBag.msg = TempData["msg"] as string;
-            //ViewBag.message1 = TempData["message1"] as string; 
-            // ViewBag.insertmsg = TempData["insertmsg"] as string;
-            // ViewBag.deletemsg = TempData["deletemsg"] as string;
-            //ViewBag.updatemsg = TempData["updatemsg"] as string;
-            using (var ctx = new ebookioEntities())
+            if (Session["admin_username"] == null)
             {
-
-                var publisherlist = ctx.tbl_publisher.SqlQuery("Select * from tbl_publisher").ToList<tbl_publisher>();
-                return View(publisherlist);
-
+                return RedirectToAction("AdminLogin");
             }
+            else
+            {
+                ViewBag.msg = TempData["msg"] as string;
+                using (var ctx = new ebookioEntities())
+                {
+
+                    var publisherlist = ctx.tbl_publisher.SqlQuery("Select * from tbl_publisher").ToList<tbl_publisher>();
+                    return View(publisherlist);
+
+                }
+            }
+            
           
         }
         public ActionResult AddPublisher()
         {
-            return View();
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                return View();
+            }
+           
         }
         [HttpPost]
         public ActionResult AddPublisher(tbl_publisher pmodel)
         {
-            if(ModelState.IsValid==true)
+            if (Session["admin_username"] == null)
             {
-                tbl_publisher p = new tbl_publisher();
-                if (eobj.tbl_publisher.Any(model=>model.publisher_name.Equals(pmodel.publisher_name)))
-                {
-                    ViewBag.errormsg = "Pulisher Name Already Use..!!";
-                }
-                else
-                {
-                    p.publisher_name = pmodel.publisher_name;
-                    eobj.tbl_publisher.Add(p);
-                    eobj.SaveChanges();
-                    // TempData["insertmsg"] = "Successfuly Inserted !!!";
-                    TempData["msg"] = "Successfuly Inserted !!!";
-                    return RedirectToAction("Publisher");
-                }
-                
-              
+                return RedirectToAction("AdminLogin");
             }
-            return View();
+            else
+            {
+                if (ModelState.IsValid == true)
+                {
+                    tbl_publisher p = new tbl_publisher();
+                    if (eobj.tbl_publisher.Any(model => model.publisher_name.Equals(pmodel.publisher_name)))
+                    {
+                        ViewBag.errormsg = "Pulisher Name Already Use..!!";
+                    }
+                    else
+                    {
+                        p.publisher_name = pmodel.publisher_name;
+                        eobj.tbl_publisher.Add(p);
+                        eobj.SaveChanges();
+                        TempData["msg"] = "Successfuly Inserted !!!";
+                        return RedirectToAction("Publisher");
+                    }
+
+
+                }
+                return View();
+            }
+            
         }
         public ActionResult DeletePublisher(int deleteid)
         {
-            var deleterecord = eobj.tbl_publisher.Where(x => x.publisher_id == deleteid).First();
-            eobj.tbl_publisher.Remove(deleterecord);
-            eobj.SaveChanges();
-            // TempData["msg"] = "Successfuly Deleted !!!";
-            //TempData["message1"] = "Delete Record Successfully";
-            var list = eobj.tbl_publisher.ToList();
-            return View("Publisher",list);
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                var deleterecord = eobj.tbl_publisher.Where(x => x.publisher_id == deleteid).First();
+                eobj.tbl_publisher.Remove(deleterecord);
+                eobj.SaveChanges();
+                TempData["msg"] = "Successfuly Deleted !!!";
+                return RedirectToAction("Publisher");
+            }
+           
         }
         public ActionResult EditPublisher(int publisher_id)
         {
-            var row = eobj.tbl_publisher.Where(x=>x.publisher_id == publisher_id).FirstOrDefault();
-            return View(row);
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                var row = eobj.tbl_publisher.Where(x => x.publisher_id == publisher_id).FirstOrDefault();
+                return View(row);
+            }
+            
         }
         [HttpPost]
         public ActionResult EditPublisher(tbl_publisher pmodel)
         {
-            if(ModelState.IsValid==true)
+            if (Session["admin_username"] == null)
             {
-                if (eobj.tbl_publisher.Any(model => model.publisher_name.Equals(pmodel.publisher_name)))
-                {
-                    ViewBag.errormsg = "Pulisher Name Already Use..!!";
-                }
-                else
-                {
-                    tbl_publisher p = new tbl_publisher();
-                    p.publisher_id = pmodel.publisher_id;
-                    p.publisher_name = pmodel.publisher_name;
-                    eobj.Entry(p).State = EntityState.Modified;
-                    eobj.SaveChanges();
-                    //  TempData["updatemsg"] = "Successfuly Updated !!!";
-                    TempData["msg"] = "Successfuly Updated !!!";
-                    return RedirectToAction("Publisher");
-                }
-              
+                return RedirectToAction("AdminLogin");
             }
-            return View();
+            else
+            {
+                if (ModelState.IsValid == true)
+                {
+                    if (eobj.tbl_publisher.Any(model => model.publisher_name.Equals(pmodel.publisher_name)))
+                    {
+                        ViewBag.errormsg = "Pulisher Name Already Use..!!";
+                    }
+                    else
+                    {
+                        tbl_publisher p = new tbl_publisher();
+                        p.publisher_id = pmodel.publisher_id;
+                        p.publisher_name = pmodel.publisher_name;
+                        eobj.Entry(p).State = EntityState.Modified;
+                        eobj.SaveChanges();
+                        TempData["msg"] = "Successfuly Updated !!!";
+                        return RedirectToAction("Publisher");
+                    }
+
+                }
+                return View();
+            }
+            
         }
+
+        //--------------------------------------------------------------------------------------------
+        //----------------------------------------------Language--------------------------------------
+        //--------------------------------------------------------------------------------------------
+
+        public ActionResult Language()
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                ViewBag.msg = TempData["msg"] as string;
+                using (var ctx = new ebookioEntities())
+                {
+
+                    var languagelist = ctx.tbl_language.SqlQuery("Select * from tbl_language").ToList<tbl_language>();
+                    return View(languagelist);
+
+                }
+            }
+
+
+        }
+        public ActionResult AddLanguage()
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                return View();
+            }
+
+        }
+        [HttpPost]
+        public ActionResult AddLanguage(tbl_language lmodel)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                if (ModelState.IsValid == true)
+                {
+                    tbl_language l = new tbl_language();
+                    if (eobj.tbl_language.Any(model => model.language_name.Equals(lmodel.language_name)))
+                    {
+                        ViewBag.errormsg = "Language Name Already Use..!!";
+                    }
+                    else
+                    {
+                        l.language_name = lmodel.language_name;
+                        eobj.tbl_language.Add(l);
+                        eobj.SaveChanges();
+                        TempData["msg"] = "Successfuly Inserted !!!";
+                        return RedirectToAction("Language");
+                    }
+                }
+                return View();
+            }
+
+        }
+        public ActionResult DeleteLanguage(int deleteid)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                var deleterecord = eobj.tbl_language.Where(x => x.language_id == deleteid).First();
+                eobj.tbl_language.Remove(deleterecord);
+                eobj.SaveChanges();
+                TempData["msg"] = "Successfuly Deleted !!!";
+                return RedirectToAction("Language");
+            }
+
+        }
+        public ActionResult EditLanguage(int language_id)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                var row = eobj.tbl_language.Where(x => x.language_id == language_id).FirstOrDefault();
+                return View(row);
+            }
+
+        }
+        [HttpPost]
+        public ActionResult EditLanguage(tbl_language lmodel)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                if (ModelState.IsValid == true)
+                {
+                    if (eobj.tbl_language.Any(model => model.language_name.Equals(lmodel.language_name)))
+                    {
+                        ViewBag.errormsg = "Language Name Already Use..!!";
+                    }
+                    else
+                    {
+                        tbl_language l = new tbl_language();
+                        l.language_id= lmodel.language_id;
+                        l.language_name= lmodel.language_name;
+                        eobj.Entry(l).State = EntityState.Modified;
+                        eobj.SaveChanges();
+                        TempData["msg"] = "Successfuly Updated !!!";
+                        return RedirectToAction("Language");
+                    }
+                }
+                return View();
+            }
+
+        }
+
 
     }
 }

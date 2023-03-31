@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ebookioModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ebookioModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="tbl_admin">
           <Key>
             <PropertyRef Name="admin_id" />
@@ -15,6 +15,13 @@
           <Property Name="admin_mobile" Type="bigint" />
           <Property Name="admin_password" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="tbl_language">
+          <Key>
+            <PropertyRef Name="language_id" />
+          </Key>
+          <Property Name="language_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="language_name" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="tbl_publisher">
           <Key>
             <PropertyRef Name="publisher_id" />
@@ -24,10 +31,10 @@
         </EntityType>
         <EntityContainer Name="ebookioModelStoreContainer">
           <EntitySet Name="tbl_admin" EntityType="Self.tbl_admin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_language" EntityType="Self.tbl_language" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_publisher" EntityType="Self.tbl_publisher" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ebookioModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -51,7 +58,15 @@
         <EntityContainer Name="ebookioEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="tbl_admin" EntityType="Self.tbl_admin" />
           <EntitySet Name="tbl_publisher" EntityType="Self.tbl_publisher" />
+          <EntitySet Name="tbl_language" EntityType="ebookioModel.tbl_language" />
         </EntityContainer>
+        <EntityType Name="tbl_language">
+          <Key>
+            <PropertyRef Name="language_id" />
+          </Key>
+          <Property Name="language_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="language_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -74,6 +89,14 @@
               <MappingFragment StoreEntitySet="tbl_publisher">
                 <ScalarProperty Name="publisher_id" ColumnName="publisher_id" />
                 <ScalarProperty Name="publisher_name" ColumnName="publisher_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_language">
+            <EntityTypeMapping TypeName="ebookioModel.tbl_language">
+              <MappingFragment StoreEntitySet="tbl_language">
+                <ScalarProperty Name="language_name" ColumnName="language_name" />
+                <ScalarProperty Name="language_id" ColumnName="language_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
