@@ -28,5 +28,13 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="tbl_author">
+      <EntityTypeMapping TypeName="ebookioModel.tbl_author">
+        <MappingFragment StoreEntitySet="tbl_author">
+          <ScalarProperty Name="author_name" ColumnName="author_name" />
+          <ScalarProperty Name="author_id" ColumnName="author_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

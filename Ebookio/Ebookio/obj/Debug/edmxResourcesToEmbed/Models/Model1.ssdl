@@ -10,6 +10,13 @@
     <Property Name="admin_mobile" Type="bigint" />
     <Property Name="admin_password" Type="varchar" MaxLength="50" />
   </EntityType>
+  <EntityType Name="tbl_author">
+    <Key>
+      <PropertyRef Name="author_id" />
+    </Key>
+    <Property Name="author_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="author_name" Type="varchar" MaxLength="50" />
+  </EntityType>
   <EntityType Name="tbl_language">
     <Key>
       <PropertyRef Name="language_id" />
@@ -26,6 +33,7 @@
   </EntityType>
   <EntityContainer Name="ebookioModelStoreContainer">
     <EntitySet Name="tbl_admin" EntityType="Self.tbl_admin" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_author" EntityType="Self.tbl_author" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="tbl_language" EntityType="Self.tbl_language" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="tbl_publisher" EntityType="Self.tbl_publisher" Schema="dbo" store:Type="Tables" />
   </EntityContainer>

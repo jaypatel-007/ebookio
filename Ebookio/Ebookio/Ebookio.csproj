@@ -151,6 +151,9 @@
     <Compile Include="Models\tbl_admin.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_author.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_language.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -501,6 +504,9 @@
     <Content Include="Views\Admin\Language.cshtml" />
     <Content Include="Views\Admin\AddLanguage.cshtml" />
     <Content Include="Views\Admin\EditLanguage.cshtml" />
+    <Content Include="Views\Admin\Author.cshtml" />
+    <Content Include="Views\Admin\AddAuthor.cshtml" />
+    <Content Include="Views\Admin\EditAuthor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

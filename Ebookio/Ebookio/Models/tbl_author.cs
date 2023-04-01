@@ -17,15 +17,15 @@ using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
-    public partial class tbl_publisher
+    public partial class tbl_author
 {
 
-        public int publisher_id { get; set; }
-        [Required(ErrorMessage = "Please Enter Publisher Name")]
-        [DisplayName("Publisher Name")]
+    public int author_id { get; set; }
+        [Required(ErrorMessage = "Please Enter Author Name")]
+        [DisplayName("Author Name")]
         [RegularExpression("[A-Za-z ]*", ErrorMessage = "Enter only alphabets Allows..!")]
-        public string publisher_name { get; set; }
+        public string author_name { get; set; }
 
-    }
+}
 
 }

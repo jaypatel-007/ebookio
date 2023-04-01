@@ -332,6 +332,127 @@ namespace Ebookio.Controllers
 
         }
 
+        //--------------------------------------------------------------------------------------------
+        //----------------------------------------------Author--------------------------------------
+        //--------------------------------------------------------------------------------------------
+
+        public ActionResult Author()
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                ViewBag.msg = TempData["msg"] as string;
+                using (var ctx = new ebookioEntities())
+                {
+
+                    var authorlist = ctx.tbl_author.SqlQuery("Select * from tbl_author").ToList<tbl_author>();
+                    return View(authorlist);
+
+                }
+            }
+        }
+        public ActionResult AddAuthor()
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                return View();
+            }
+
+        }
+        [HttpPost]
+        public ActionResult AddAuthor(tbl_author amodel)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                if (ModelState.IsValid == true)
+                {
+                    tbl_author a = new tbl_author();
+                    if (eobj.tbl_author.Any(model => model.author_name.Equals(amodel.author_name)))
+                    {
+                        ViewBag.errormsg = "Author Name Already Use..!!";
+                    }
+                    else
+                    {
+                        a.author_name= amodel.author_name;
+                        eobj.tbl_author.Add(a);
+                        eobj.SaveChanges();
+                        TempData["msg"] = "Successfuly Inserted !!!";
+                        return RedirectToAction("Author");
+                    }
+                }
+                return View();
+            }
+        }
+        public ActionResult DeleteAuthor(int deleteid)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                var deleterecord = eobj.tbl_author.Where(x => x.author_id== deleteid).First();
+                eobj.tbl_author.Remove(deleterecord);
+                eobj.SaveChanges();
+                TempData["msg"] = "Successfuly Deleted !!!";
+                return RedirectToAction("Author");
+            }
+
+        }
+        public ActionResult EditAuthor(int author_id)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                var row = eobj.tbl_author.Where(x => x.author_id == author_id).FirstOrDefault();
+                return View(row);
+            }
+
+        }
+        [HttpPost]
+        public ActionResult EditAuthor(tbl_author amodel)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                if (ModelState.IsValid == true)
+                {
+                    if (eobj.tbl_author.Any(model => model.author_name.Equals(amodel.author_name)))
+                    {
+                        ViewBag.errormsg = "Author Name Already Use..!!";
+                    }
+                    else
+                    {
+                        tbl_author a = new tbl_author();
+                        a.author_id = amodel.author_id;
+                        a.author_name = amodel.author_name;
+                        eobj.Entry(a).State = EntityState.Modified;
+                        eobj.SaveChanges();
+                        TempData["msg"] = "Successfuly Updated !!!";
+                        return RedirectToAction("Author");
+                    }
+                }
+                return View();
+            }
+
+        }
 
     }
 }

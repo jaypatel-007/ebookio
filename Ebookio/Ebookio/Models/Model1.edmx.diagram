@@ -8,6 +8,7 @@
         <EntityTypeShape EntityType="ebookioModel.tbl_admin" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ebookioModel.tbl_publisher" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ebookioModel.tbl_language" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="ebookioModel.tbl_author" Width="1.5" PointX="3.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

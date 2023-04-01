@@ -38,6 +38,8 @@ public partial class ebookioEntities : DbContext
 
     public virtual DbSet<tbl_language> tbl_language { get; set; }
 
+    public virtual DbSet<tbl_author> tbl_author { get; set; }
+
 }
 
 }
