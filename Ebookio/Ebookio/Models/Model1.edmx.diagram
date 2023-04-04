@@ -9,6 +9,10 @@
         <EntityTypeShape EntityType="ebookioModel.tbl_publisher" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ebookioModel.tbl_language" Width="1.5" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="ebookioModel.tbl_author" Width="1.5" PointX="3.375" PointY="3.75" />
+        <EntityTypeShape EntityType="ebookioModel.tbl_book" Width="1.5" PointX="5.625" PointY="1" />
+        <AssociationConnector Association="ebookioModel.FK_tbl_book_tbl_author" />
+        <AssociationConnector Association="ebookioModel.FK_tbl_book_tbl_language" />
+        <AssociationConnector Association="ebookioModel.FK_tbl_book_tbl_publisher" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

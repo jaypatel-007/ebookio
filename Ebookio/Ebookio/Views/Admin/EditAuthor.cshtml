@@ -9,27 +9,32 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title mb-4">Author</h4>
+                @if (@TempData["authoruse"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["authoruse"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
                 @using (Html.BeginForm("EditAuthor", "Admin", FormMethod.Post))
                 {
-                    @Html.HiddenFor(x => x.author_id)
-                    <div class="outer">
-                        <div class="outer">
-                            <div class="mb-3">
-                                @Html.LabelFor(model => model.author_name)
-                                @Html.TextBoxFor(x => x.author_name, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.author_name, "", new { @class = "text-danger" })
-                                @{ if (@ViewBag.errormsg != null)
-                                   {
-                                    <span class="text-danger"> @ViewBag.errormsg </span>
-                                   }
-                                }
-                            </div>
-                            <button type="submit" class="btn btn-primary">SUBMIT</button>
-                            <a href="/Admin/Author">
-                                <button type="button" class="btn btn-primary">RESET</button>
-                            </a>
-                        </div>
-                    </div>}
+            @Html.HiddenFor(x => x.author_id)
+                            <div class="outer">
+                                <div class="outer">
+                                    <div class="mb-3">
+                                        @Html.LabelFor(model => model.author_name)
+                                        @Html.TextBoxFor(x => x.author_name, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.author_name, "", new { @class = "text-danger" })
+                                        @{ if (@ViewBag.errormsg != null)
+                                            {
+                            <span class="text-danger"> @ViewBag.errormsg </span> } }
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">SUBMIT</button>
+                                    <a href="/Admin/Author">
+                                        <button type="button" class="btn btn-primary">RESET</button>
+                                    </a>
+                                </div>
+                            </div>}
             </div>
         </div>
     </div>

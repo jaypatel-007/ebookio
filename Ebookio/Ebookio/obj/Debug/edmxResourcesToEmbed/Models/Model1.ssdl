@@ -17,6 +17,24 @@
     <Property Name="author_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="author_name" Type="varchar" MaxLength="50" />
   </EntityType>
+  <EntityType Name="tbl_book">
+    <Key>
+      <PropertyRef Name="book_id" />
+    </Key>
+    <Property Name="book_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="book_title" Type="varchar" MaxLength="50" />
+    <Property Name="isbn" Type="varchar" MaxLength="50" />
+    <Property Name="no_of_pages" Type="int" />
+    <Property Name="publish_date" Type="date" />
+    <Property Name="real_price" Type="varchar" MaxLength="50" />
+    <Property Name="sell_price" Type="varchar" MaxLength="50" />
+    <Property Name="cover_image" Type="varchar(max)" />
+    <Property Name="publisher_id" Type="int" />
+    <Property Name="author_id" Type="int" />
+    <Property Name="language_id" Type="int" />
+    <Property Name="is_free" Type="varchar" MaxLength="50" />
+    <Property Name="upload_pdf" Type="varchar(max)" />
+  </EntityType>
   <EntityType Name="tbl_language">
     <Key>
       <PropertyRef Name="language_id" />
@@ -31,10 +49,59 @@
     <Property Name="publisher_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="publisher_name" Type="varchar" MaxLength="50" />
   </EntityType>
+  <Association Name="FK_tbl_book_tbl_author">
+    <End Role="tbl_author" Type="Self.tbl_author" Multiplicity="0..1" />
+    <End Role="tbl_book" Type="Self.tbl_book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_author">
+        <PropertyRef Name="author_id" />
+      </Principal>
+      <Dependent Role="tbl_book">
+        <PropertyRef Name="author_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_book_tbl_language">
+    <End Role="tbl_language" Type="Self.tbl_language" Multiplicity="0..1" />
+    <End Role="tbl_book" Type="Self.tbl_book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_language">
+        <PropertyRef Name="language_id" />
+      </Principal>
+      <Dependent Role="tbl_book">
+        <PropertyRef Name="language_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_book_tbl_publisher">
+    <End Role="tbl_publisher" Type="Self.tbl_publisher" Multiplicity="0..1" />
+    <End Role="tbl_book" Type="Self.tbl_book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_publisher">
+        <PropertyRef Name="publisher_id" />
+      </Principal>
+      <Dependent Role="tbl_book">
+        <PropertyRef Name="publisher_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="ebookioModelStoreContainer">
     <EntitySet Name="tbl_admin" EntityType="Self.tbl_admin" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="tbl_author" EntityType="Self.tbl_author" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_book" EntityType="Self.tbl_book" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="tbl_language" EntityType="Self.tbl_language" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="tbl_publisher" EntityType="Self.tbl_publisher" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_tbl_book_tbl_author" Association="Self.FK_tbl_book_tbl_author">
+      <End Role="tbl_author" EntitySet="tbl_author" />
+      <End Role="tbl_book" EntitySet="tbl_book" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_book_tbl_language" Association="Self.FK_tbl_book_tbl_language">
+      <End Role="tbl_language" EntitySet="tbl_language" />
+      <End Role="tbl_book" EntitySet="tbl_book" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_book_tbl_publisher" Association="Self.FK_tbl_book_tbl_publisher">
+      <End Role="tbl_publisher" EntitySet="tbl_publisher" />
+      <End Role="tbl_book" EntitySet="tbl_book" />
+    </AssociationSet>
   </EntityContainer>
 </Schema>

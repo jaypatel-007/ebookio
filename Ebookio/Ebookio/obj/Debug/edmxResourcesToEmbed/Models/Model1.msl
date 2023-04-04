@@ -36,5 +36,24 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="tbl_book">
+      <EntityTypeMapping TypeName="ebookioModel.tbl_book">
+        <MappingFragment StoreEntitySet="tbl_book">
+          <ScalarProperty Name="upload_pdf" ColumnName="upload_pdf" />
+          <ScalarProperty Name="is_free" ColumnName="is_free" />
+          <ScalarProperty Name="language_id" ColumnName="language_id" />
+          <ScalarProperty Name="author_id" ColumnName="author_id" />
+          <ScalarProperty Name="publisher_id" ColumnName="publisher_id" />
+          <ScalarProperty Name="cover_image" ColumnName="cover_image" />
+          <ScalarProperty Name="sell_price" ColumnName="sell_price" />
+          <ScalarProperty Name="real_price" ColumnName="real_price" />
+          <ScalarProperty Name="publish_date" ColumnName="publish_date" />
+          <ScalarProperty Name="no_of_pages" ColumnName="no_of_pages" />
+          <ScalarProperty Name="isbn" ColumnName="isbn" />
+          <ScalarProperty Name="book_title" ColumnName="book_title" />
+          <ScalarProperty Name="book_id" ColumnName="book_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

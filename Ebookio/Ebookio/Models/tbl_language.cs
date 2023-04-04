@@ -20,11 +20,26 @@ using System;
     public partial class tbl_language
 {
 
-    public int language_id { get; set; }
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+    public tbl_language()
+    {
+
+        this.tbl_book = new HashSet<tbl_book>();
+
+    }
+
+
+        public int language_id { get; set; }
         [Required(ErrorMessage = "Please Enter Language Name")]
         [DisplayName("Language Name")]
         [RegularExpression("[A-Za-z ]*", ErrorMessage = "Enter only alphabets Allows..!")]
         public string language_name { get; set; }
+
+
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+
+    public virtual ICollection<tbl_book> tbl_book { get; set; }
 
 }
 

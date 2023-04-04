@@ -16,12 +16,26 @@
     </Key>
     <Property Name="publisher_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="publisher_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="tbl_book" Relationship="ebookioModel.FK_tbl_book_tbl_publisher" FromRole="tbl_publisher" ToRole="tbl_book" />
   </EntityType>
   <EntityContainer Name="ebookioEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="tbl_admin" EntityType="Self.tbl_admin" />
     <EntitySet Name="tbl_publisher" EntityType="Self.tbl_publisher" />
     <EntitySet Name="tbl_language" EntityType="ebookioModel.tbl_language" />
     <EntitySet Name="tbl_author" EntityType="ebookioModel.tbl_author" />
+    <EntitySet Name="tbl_book" EntityType="ebookioModel.tbl_book" />
+    <AssociationSet Name="FK_tbl_book_tbl_author" Association="ebookioModel.FK_tbl_book_tbl_author">
+      <End Role="tbl_author" EntitySet="tbl_author" />
+      <End Role="tbl_book" EntitySet="tbl_book" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_book_tbl_language" Association="ebookioModel.FK_tbl_book_tbl_language">
+      <End Role="tbl_language" EntitySet="tbl_language" />
+      <End Role="tbl_book" EntitySet="tbl_book" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_book_tbl_publisher" Association="ebookioModel.FK_tbl_book_tbl_publisher">
+      <End Role="tbl_publisher" EntitySet="tbl_publisher" />
+      <End Role="tbl_book" EntitySet="tbl_book" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="tbl_language">
     <Key>
@@ -29,6 +43,7 @@
     </Key>
     <Property Name="language_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="language_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="tbl_book" Relationship="ebookioModel.FK_tbl_book_tbl_language" FromRole="tbl_language" ToRole="tbl_book" />
   </EntityType>
   <EntityType Name="tbl_author">
     <Key>
@@ -36,5 +51,63 @@
     </Key>
     <Property Name="author_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="author_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="tbl_book" Relationship="ebookioModel.FK_tbl_book_tbl_author" FromRole="tbl_author" ToRole="tbl_book" />
   </EntityType>
+  <EntityType Name="tbl_book">
+    <Key>
+      <PropertyRef Name="book_id" />
+    </Key>
+    <Property Name="book_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="book_title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="isbn" Type="String" />
+    <Property Name="no_of_pages" Type="Int32" />
+    <Property Name="publish_date" Type="DateTime" Precision="0" />
+    <Property Name="real_price" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="sell_price" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="cover_image" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="publisher_id" Type="Int32" />
+    <Property Name="author_id" Type="Int32" />
+    <Property Name="language_id" Type="Int32" />
+    <Property Name="is_free" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="upload_pdf" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="tbl_author" Relationship="ebookioModel.FK_tbl_book_tbl_author" FromRole="tbl_book" ToRole="tbl_author" />
+    <NavigationProperty Name="tbl_language" Relationship="ebookioModel.FK_tbl_book_tbl_language" FromRole="tbl_book" ToRole="tbl_language" />
+    <NavigationProperty Name="tbl_publisher" Relationship="ebookioModel.FK_tbl_book_tbl_publisher" FromRole="tbl_book" ToRole="tbl_publisher" />
+  </EntityType>
+  <Association Name="FK_tbl_book_tbl_author">
+    <End Type="ebookioModel.tbl_author" Role="tbl_author" Multiplicity="0..1" />
+    <End Type="ebookioModel.tbl_book" Role="tbl_book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_author">
+        <PropertyRef Name="author_id" />
+      </Principal>
+      <Dependent Role="tbl_book">
+        <PropertyRef Name="author_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_book_tbl_language">
+    <End Type="ebookioModel.tbl_language" Role="tbl_language" Multiplicity="0..1" />
+    <End Type="ebookioModel.tbl_book" Role="tbl_book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_language">
+        <PropertyRef Name="language_id" />
+      </Principal>
+      <Dependent Role="tbl_book">
+        <PropertyRef Name="language_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_book_tbl_publisher">
+    <End Type="ebookioModel.tbl_publisher" Role="tbl_publisher" Multiplicity="0..1" />
+    <End Type="ebookioModel.tbl_book" Role="tbl_book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_publisher">
+        <PropertyRef Name="publisher_id" />
+      </Principal>
+      <Dependent Role="tbl_book">
+        <PropertyRef Name="publisher_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

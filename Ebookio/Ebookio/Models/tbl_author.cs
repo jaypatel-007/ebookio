@@ -20,11 +20,26 @@ using System;
     public partial class tbl_author
 {
 
-    public int author_id { get; set; }
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+    public tbl_author()
+    {
+
+        this.tbl_book = new HashSet<tbl_book>();
+
+    }
+
+
+        public int author_id { get; set; }
         [Required(ErrorMessage = "Please Enter Author Name")]
         [DisplayName("Author Name")]
         [RegularExpression("[A-Za-z ]*", ErrorMessage = "Enter only alphabets Allows..!")]
         public string author_name { get; set; }
+
+
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+
+    public virtual ICollection<tbl_book> tbl_book { get; set; }
 
 }
 

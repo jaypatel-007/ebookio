@@ -9,28 +9,28 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title mb-4">Publisher</h4>
-                @using (Html.BeginForm("AddPublisher", "Admin", FormMethod.Post))
+                @if (@TempData["pubuse"] != null)
                 {
-                    <div class="outer">
-                        <div class="outer">
-                            <div class="mb-3">
-                                @Html.LabelFor(model => model.publisher_name)
-                                @Html.TextBoxFor(model => model.publisher_name, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.publisher_name, "", new { @class = "text-danger" })
-                                @{
-                                    if (@ViewBag.errormsg != null)
-                                    {
-                                        <span class="text-danger"> @ViewBag.errormsg </span>
-                                    }
-                                }
-                            </div>
-                            
-                                
-
-                            <button type="submit" class="btn btn-primary">SUBMIT</button>
-                        </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["pubuse"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 }
+                @using (Html.BeginForm("AddPublisher", "Admin", FormMethod.Post))
+                {
+            <div class="outer">
+                <div class="outer">
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.publisher_name)
+                        @Html.TextBoxFor(model => model.publisher_name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.publisher_name, "", new { @class = "text-danger" })
+                        @{ if (@ViewBag.errormsg != null)
+                                            {
+                            <span class="text-danger"> @ViewBag.errormsg </span> } }
+                    </div>
+                    <button type="submit" class="btn btn-primary">SUBMIT</button>
+                </div>
+            </div>}
             </div>
         </div>
     </div>

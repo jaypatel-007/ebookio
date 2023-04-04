@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -19,9 +20,9 @@ namespace Ebookio.Controllers
         public ActionResult AdminLogin()
         {
             HttpCookie cookie = Request.Cookies["AdminLoginDetails"];
-            if(cookie != null)
+            if (cookie != null)
             {
-                ViewBag.admin_emailid= cookie["admin_emailid"].ToString();
+                ViewBag.admin_emailid = cookie["admin_emailid"].ToString();
                 ViewBag.admin_password = cookie["admin_password"].ToString();
             }
             return View();
@@ -30,10 +31,10 @@ namespace Ebookio.Controllers
         public ActionResult AdminLogin(tbl_admin a)
         {
             HttpCookie cookie = new HttpCookie("AdminLoginDetails");
-            if(ModelState.IsValid==true)
+            if (ModelState.IsValid == true)
             {
 
-                if(a.RememberMe == true)
+                if (a.RememberMe == true)
                 {
                     cookie["admin_emailid"] = a.admin_emailid;
                     cookie["admin_password"] = a.admin_password;
@@ -46,8 +47,8 @@ namespace Ebookio.Controllers
                     HttpContext.Response.Cookies.Add(cookie);
                 }
 
-                var adminauth = eobj.tbl_admin.Where(model=>model.admin_emailid == a.admin_emailid && model.admin_password == a.admin_password).FirstOrDefault();
-                if(adminauth == null)
+                var adminauth = eobj.tbl_admin.Where(model => model.admin_emailid == a.admin_emailid && model.admin_password == a.admin_password).FirstOrDefault();
+                if (adminauth == null)
                 {
                     ViewBag.msg = "Please Enter Correct EmailId Or Password";
                     return View();
@@ -63,7 +64,7 @@ namespace Ebookio.Controllers
         }
         public ActionResult AdminDashboard()
         {
-            if(Session["admin_username"]==null)
+            if (Session["admin_username"] == null)
             {
                 return RedirectToAction("AdminLogin");
             }
@@ -71,7 +72,7 @@ namespace Ebookio.Controllers
             {
                 return View();
             }
-            
+
         }
         public ActionResult AdminLogOut()
         {
@@ -100,8 +101,8 @@ namespace Ebookio.Controllers
 
                 }
             }
-            
-          
+
+
         }
         public ActionResult AddPublisher()
         {
@@ -113,7 +114,7 @@ namespace Ebookio.Controllers
             {
                 return View();
             }
-           
+
         }
         [HttpPost]
         public ActionResult AddPublisher(tbl_publisher pmodel)
@@ -129,7 +130,7 @@ namespace Ebookio.Controllers
                     tbl_publisher p = new tbl_publisher();
                     if (eobj.tbl_publisher.Any(model => model.publisher_name.Equals(pmodel.publisher_name)))
                     {
-                        ViewBag.errormsg = "Pulisher Name Already Use..!!";
+                        TempData["pubuse"] = "Publisher Name Already Use..!!";
                     }
                     else
                     {
@@ -144,7 +145,7 @@ namespace Ebookio.Controllers
                 }
                 return View();
             }
-            
+
         }
         public ActionResult DeletePublisher(int deleteid)
         {
@@ -160,7 +161,7 @@ namespace Ebookio.Controllers
                 TempData["msg"] = "Successfuly Deleted !!!";
                 return RedirectToAction("Publisher");
             }
-           
+
         }
         public ActionResult EditPublisher(int publisher_id)
         {
@@ -173,7 +174,7 @@ namespace Ebookio.Controllers
                 var row = eobj.tbl_publisher.Where(x => x.publisher_id == publisher_id).FirstOrDefault();
                 return View(row);
             }
-            
+
         }
         [HttpPost]
         public ActionResult EditPublisher(tbl_publisher pmodel)
@@ -188,7 +189,7 @@ namespace Ebookio.Controllers
                 {
                     if (eobj.tbl_publisher.Any(model => model.publisher_name.Equals(pmodel.publisher_name)))
                     {
-                        ViewBag.errormsg = "Pulisher Name Already Use..!!";
+                        TempData["pubuse"] = "Publisher Name Already Use..!!";
                     }
                     else
                     {
@@ -204,7 +205,7 @@ namespace Ebookio.Controllers
                 }
                 return View();
             }
-            
+
         }
 
         //--------------------------------------------------------------------------------------------
@@ -257,7 +258,7 @@ namespace Ebookio.Controllers
                     tbl_language l = new tbl_language();
                     if (eobj.tbl_language.Any(model => model.language_name.Equals(lmodel.language_name)))
                     {
-                        ViewBag.errormsg = "Language Name Already Use..!!";
+                        TempData["lanuse"] = "Language Name Already Use..!!";
                     }
                     else
                     {
@@ -314,13 +315,13 @@ namespace Ebookio.Controllers
                 {
                     if (eobj.tbl_language.Any(model => model.language_name.Equals(lmodel.language_name)))
                     {
-                        ViewBag.errormsg = "Language Name Already Use..!!";
+                        TempData["lanuse"] = "Language Name Already Use..!!";
                     }
                     else
                     {
                         tbl_language l = new tbl_language();
-                        l.language_id= lmodel.language_id;
-                        l.language_name= lmodel.language_name;
+                        l.language_id = lmodel.language_id;
+                        l.language_name = lmodel.language_name;
                         eobj.Entry(l).State = EntityState.Modified;
                         eobj.SaveChanges();
                         TempData["msg"] = "Successfuly Updated !!!";
@@ -347,7 +348,6 @@ namespace Ebookio.Controllers
                 ViewBag.msg = TempData["msg"] as string;
                 using (var ctx = new ebookioEntities())
                 {
-
                     var authorlist = ctx.tbl_author.SqlQuery("Select * from tbl_author").ToList<tbl_author>();
                     return View(authorlist);
 
@@ -380,11 +380,11 @@ namespace Ebookio.Controllers
                     tbl_author a = new tbl_author();
                     if (eobj.tbl_author.Any(model => model.author_name.Equals(amodel.author_name)))
                     {
-                        ViewBag.errormsg = "Author Name Already Use..!!";
+                        TempData["authoruse"] = "Author Name Already Use..!!";
                     }
                     else
                     {
-                        a.author_name= amodel.author_name;
+                        a.author_name = amodel.author_name;
                         eobj.tbl_author.Add(a);
                         eobj.SaveChanges();
                         TempData["msg"] = "Successfuly Inserted !!!";
@@ -402,7 +402,7 @@ namespace Ebookio.Controllers
             }
             else
             {
-                var deleterecord = eobj.tbl_author.Where(x => x.author_id== deleteid).First();
+                var deleterecord = eobj.tbl_author.Where(x => x.author_id == deleteid).First();
                 eobj.tbl_author.Remove(deleterecord);
                 eobj.SaveChanges();
                 TempData["msg"] = "Successfuly Deleted !!!";
@@ -436,7 +436,7 @@ namespace Ebookio.Controllers
                 {
                     if (eobj.tbl_author.Any(model => model.author_name.Equals(amodel.author_name)))
                     {
-                        ViewBag.errormsg = "Author Name Already Use..!!";
+                        TempData["authoruse"] = "Author Name Already Use..!!";
                     }
                     else
                     {
@@ -454,5 +454,155 @@ namespace Ebookio.Controllers
 
         }
 
+
+        //--------------------------------------------------------------------------------------------
+        //----------------------------------------------Book--------------------------------------
+        //--------------------------------------------------------------------------------------------
+
+        public ActionResult Book()
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                ViewBag.msg = TempData["msg"] as string;
+                var booklist = eobj.tbl_book.ToList();
+                return View(booklist);
+            }
+        }
+
+        public ActionResult AddBook()
+        {
+            var publisherlist = eobj.tbl_publisher.ToList();
+            ViewBag.Publisherlist = new SelectList(publisherlist, "publisher_id", "publisher_name");
+
+            var authorlist = eobj.tbl_author.ToList();
+            ViewBag.Authorlist = new SelectList(authorlist, "author_id", "author_name");
+
+            var lanlist = eobj.tbl_language.ToList();
+            ViewBag.Lanlist = new SelectList(lanlist, "language_id", "language_name");
+            return View();
+
+        }
+
+        [HttpPost]
+        public ActionResult AddBook(tbl_book bmodel)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+
+                if (ModelState.IsValid == true)
+                {
+                    if (eobj.tbl_book.Any(model => model.book_title.Equals(bmodel.book_title)))
+                    {
+                        TempData["bookuse"] = "Book Name Already Use..!!";
+                    }
+                    if (eobj.tbl_book.Any(model => model.isbn.Equals(bmodel.isbn)))
+                    {
+                        TempData["isbnuse"] = "ISBN - 13 Already Use..!!";
+                    }
+                    else
+                    {
+                        tbl_book b = new tbl_book();
+                        b.is_free = bmodel.is_free;
+                        b.book_title = bmodel.book_title;
+                        b.isbn = bmodel.isbn;
+                        b.publish_date = bmodel.publish_date;
+                        b.no_of_pages = bmodel.no_of_pages;
+                        b.publisher_id = bmodel.publisher_id;
+                        b.author_id = bmodel.author_id;
+                        b.language_id = bmodel.language_id;
+
+                        //-------start Image Upload-------
+
+                        string imgname = Path.GetFileNameWithoutExtension(bmodel.ImageUpload.FileName);
+                        string ext = Path.GetExtension(bmodel.ImageUpload.FileName);
+                        HttpPostedFileBase image_new = bmodel.ImageUpload;
+
+                        if (ext.ToLower() == ".jpg" || ext.ToLower() == ".png" || ext.ToLower() == ".jpeg")
+                        {
+                            imgname += ext;
+                            bmodel.cover_image = "~/Document/Image/" + imgname;
+                            imgname = Path.Combine(Server.MapPath("~/Document/Image/") + imgname);
+                            bmodel.ImageUpload.SaveAs(imgname);
+                        }
+                        else
+                        {
+                            ViewBag.format = "Select Only PNG,JPEG,JPG Format";
+
+                            ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+
+                            ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+
+                            ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+
+                            return View();
+
+                        }
+
+                       
+
+                        //---------End Image Upload----
+
+                        b.real_price = bmodel.real_price;
+                        b.sell_price = bmodel.sell_price;
+
+                        //-------start Pdf Upload-------
+
+                        string filename = Path.GetFileNameWithoutExtension(bmodel.PdfUpload.FileName);
+                        string extension = Path.GetExtension(bmodel.PdfUpload.FileName);
+
+                        HttpPostedFileBase pdf_new = bmodel.PdfUpload;
+
+                        if (extension.ToLower() == ".pdf")
+                        {
+                            filename += extension;
+                            bmodel.upload_pdf = "~/Document/Pdf/" + filename;
+                            filename = Path.Combine(Server.MapPath("~/Document/Pdf/") + filename);
+                            bmodel.PdfUpload.SaveAs(filename);
+                        }
+                        else
+                        {
+                            ViewBag.pdfformat = "Select Only PDF Format";
+
+                            ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+
+                            ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+
+                            ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+
+                            return View();
+                        }
+                        //------End pdf Upload------
+
+                        b.cover_image = bmodel.cover_image;
+                        b.upload_pdf = bmodel.upload_pdf;
+
+                        eobj.tbl_book.Add(b);
+                        eobj.SaveChanges();
+                        TempData["msg"] = "Successfully Inserted !!!";
+
+                        return RedirectToAction("Book");
+                    }
+                }
+            }
+            var publisherlist = eobj.tbl_publisher.ToList();
+            ViewBag.Publisherlist = new SelectList(publisherlist, "publisher_id", "publisher_name");
+
+            var authorlist = eobj.tbl_author.ToList();
+            ViewBag.Authorlist = new SelectList(authorlist, "author_id", "author_name");
+
+            var lanlist = eobj.tbl_language.ToList();
+            ViewBag.Lanlist = new SelectList(lanlist, "language_id", "language_name");
+
+            //return RedirectToAction("AddBook");
+            return View();
+        }
     }
 }

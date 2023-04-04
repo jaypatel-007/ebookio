@@ -9,27 +9,32 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title mb-4">Language</h4>
+                @if (@TempData["lanuse"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["lanuse"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  }
                 @using (Html.BeginForm("EditLanguage", "Admin", FormMethod.Post))
                 {
-                            @Html.HiddenFor(x => x.language_id)
-                    <div class="outer">
-                        <div class="outer">
-                            <div class="mb-3">
-                                @Html.LabelFor(model => model.language_name)
-                                @Html.TextBoxFor(x => x.language_name, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.language_name, "", new { @class = "text-danger" })
-                                @{ if (@ViewBag.errormsg != null)
-                                    {
-                                        <span class="text-danger"> @ViewBag.errormsg </span>
-                                    } 
-                                }
-                            </div>
-                            <button type="submit" class="btn btn-primary">SUBMIT</button>
-                            <a href="/Admin/Language">
-                                <button type="button" class="btn btn-primary">RESET</button>
-                            </a>
-                        </div>
-                    </div>}
+            @Html.HiddenFor(x => x.language_id)
+                            <div class="outer">
+                                <div class="outer">
+                                    <div class="mb-3">
+                                        @Html.LabelFor(model => model.language_name)
+                                        @Html.TextBoxFor(x => x.language_name, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.language_name, "", new { @class = "text-danger" })
+                                        @{ if (@ViewBag.errormsg != null)
+                                            {
+                            <span class="text-danger"> @ViewBag.errormsg </span> } }
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">SUBMIT</button>
+                                    <a href="/Admin/Language">
+                                        <button type="button" class="btn btn-primary">RESET</button>
+                                    </a>
+                                </div>
+                            </div>}
             </div>
         </div>
     </div>

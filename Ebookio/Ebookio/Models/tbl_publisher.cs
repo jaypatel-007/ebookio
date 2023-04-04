@@ -20,12 +20,27 @@ using System;
     public partial class tbl_publisher
 {
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+    public tbl_publisher()
+    {
+
+        this.tbl_book = new HashSet<tbl_book>();
+
+    }
+
+
         public int publisher_id { get; set; }
         [Required(ErrorMessage = "Please Enter Publisher Name")]
         [DisplayName("Publisher Name")]
         [RegularExpression("[A-Za-z ]*", ErrorMessage = "Enter only alphabets Allows..!")]
         public string publisher_name { get; set; }
 
-    }
+
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+
+    public virtual ICollection<tbl_book> tbl_book { get; set; }
+
+}
 
 }
