@@ -42,6 +42,8 @@ public partial class ebookioEntities : DbContext
 
     public virtual DbSet<tbl_book> tbl_book { get; set; }
 
+    public virtual DbSet<tbl_category> tbl_category { get; set; }
+
 }
 
 }

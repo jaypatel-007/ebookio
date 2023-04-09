@@ -16,6 +16,9 @@
                         @TempData["bookuse"]
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
+                }
+                @if (@TempData["isbnuse"] != null)
+                {
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         @TempData["isbnuse"]
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -46,7 +49,7 @@
                             </div>
                             <div class="mb-3">
                                 @Html.LabelFor(model => model.publish_date)
-                                <input type="date" class="form-control" name="publish_date">
+                                @Html.TextBoxFor(model => model.publish_date, new { @class = "form-control datetimepicker" })
                                 @Html.ValidationMessageFor(model => model.publish_date, "", new { @class = "text-danger" })
                             </div>
                             <div class="mb-3">
@@ -71,29 +74,54 @@
                                 @Html.ValidationMessageFor(model => model.language_id, "", new { @class = "text-danger" })
                             </div>
                             <div class="mb-3">
-                                @Html.LabelFor(model => model.cover_image)
-                                <input type="file" class="form-control" name="ImageUpload" required />
-                                @{ if (@ViewBag.format != null)
-                                    {
-                            <span class="text-danger"> @ViewBag.format </span> } }
+                                @Html.LabelFor(model => model.category_id)
+                                @Html.DropDownListFor(model => model.category_id, ViewBag.catlist as SelectList, "Select Category", new { @class = "form-select" })
+                                @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
                             </div>
                             <div class="mb-3">
+                                @Html.LabelFor(model => model.cover_image)
+                                <input type="file" class="form-control" name="file" id="file" required />
+                                @{ if (@ViewBag.format != null)
+                                    {
+                                        <span class="text-danger"> @ViewBag.format </span>
+                                    }
+                                }
+                                @{ if (@ViewBag.size != null)
+                                    {
+                                        <span class="text-danger"> @ViewBag.size </span>
+                                    }
+                                }
+
+                            </div>
+                            <div class="mb-3" id="showrealprice">
                                 @Html.LabelFor(model => model.real_price)
                                 @Html.TextBoxFor(model => model.real_price, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.real_price, "", new { @class = "text-danger" })
+                                @{ if (@ViewBag.realprice != null)
+                                    {
+                                        <span class="text-danger"> @ViewBag.realprice </span> } }
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3" id="showsellprice">
                                 @Html.LabelFor(model => model.sell_price)
                                 @Html.TextBoxFor(model => model.sell_price, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.sell_price, "", new { @class = "text-danger" })
+                                @{ if (@ViewBag.sellprice != null)
+                                    {
+                                        <span class="text-danger"> @ViewBag.sellprice </span> } }
                             </div>
 
-                            <div class="mb-3">
+                            <div class="mb-3" id="showpdf">
                                 @Html.LabelFor(model => model.upload_pdf)
-                                <input type="file" name="PdfUpload" class="form-control" required />
+                                <input type="file" name="Pdffile" class="form-control" />
+                                @{ if (@ViewBag.pdfr != null)
+                                    {
+                                        <span class="text-danger"> @ViewBag.pdfr </span> } }
                                 @{ if (@ViewBag.pdfformat != null)
                                     {
                                         <span class="text-danger"> @ViewBag.pdfformat </span> } }
+                                @{ if (@ViewBag.pdfsize != null)
+                                    {
+                                        <span class="text-danger"> @ViewBag.pdfsize </span> } }
                             </div>
 
                             <button type="submit" class="btn btn-primary">SUBMIT</button>
@@ -104,6 +132,24 @@
         </div>
     </div>
 </div>
+
+
+<script type="text/javascript">
+    function showHide() {
+        let travelhistory = document.getElementById('is_free')
+        if (travelhistory.value == "free") {
+            document.getElementById('showrealprice').style.display = 'none'
+            document.getElementById('showsellprice').style.display = 'none'
+            document.getElementById('showpdf').style.display = 'block'
+        } else {
+            document.getElementById('showrealprice').style.display = 'block'
+            document.getElementById('showsellprice').style.display = 'block'
+            document.getElementById('showpdf').style.display = 'none'
+
+
+        }
+    }
+</script>
 
 <script src="~/assets/libs/jquery/jquery.min.js"></script>
 <script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>

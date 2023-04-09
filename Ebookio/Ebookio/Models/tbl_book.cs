@@ -18,11 +18,10 @@ using System;
     using System.ComponentModel.DataAnnotations;
     using System.Web;
 
-
     public partial class tbl_book
 {
 
-    public int book_id { get; set; }
+        public int book_id { get; set; }
         [Required(ErrorMessage = "Please Enter Book Name")]
         [DisplayName("Book Name")]
         [RegularExpression("[A-Za-z ]*", ErrorMessage = "Enter only alphabets Allows..!")]
@@ -32,16 +31,13 @@ using System;
         public string isbn { get; set; }
         [DisplayName("No Of Pages")]
         [Required(ErrorMessage = "Please Enter No of Pages")]
-
         public Nullable<int> no_of_pages { get; set; }
         [DisplayName("Publish Date")]
         [Required(ErrorMessage = "Please Enter Select Publish Date")]
         public Nullable<System.DateTime> publish_date { get; set; }
         [DisplayName("Real Price")]
-        [Required(ErrorMessage = "Please Enter Real Price")]
         public string real_price { get; set; }
         [DisplayName("Sell Price")]
-        [Required(ErrorMessage = "Please Enter Sell Price")]
         public string sell_price { get; set; }
         [DisplayName("Cover Image")]
         public string cover_image { get; set; }
@@ -55,13 +51,15 @@ using System;
         [Required(ErrorMessage = "Please Enter Language Name")]
         public Nullable<int> language_id { get; set; }
         [DisplayName("Book Status")]
-        [Required(ErrorMessage = "Please Enter Book Status")]
+       /* [Required(ErrorMessage = "Please Enter Book Status")]*/
         public string is_free { get; set; }
-        [DisplayName("PDF")]
+       /* [DisplayName("PDF")]*/
         public string upload_pdf { get; set; }
-        public HttpPostedFileBase ImageUpload { get; set; }
-        public HttpPostedFileBase PdfUpload { get; set; }
-
+        [DisplayName("Category")]
+        [Required(ErrorMessage = "Please Enter Category Name")]
+        public Nullable<int> category_id { get; set; }
+       /* public HttpPostedFileBase ImageUpload { get; set; }*/
+        /*public HttpPostedFileBase PdfUpload { get; set; }*/
 
 
         public virtual tbl_author tbl_author { get; set; }
@@ -70,8 +68,8 @@ using System;
 
     public virtual tbl_publisher tbl_publisher { get; set; }
 
-        
+    public virtual tbl_category tbl_category { get; set; }
 
-    }
+}
 
 }

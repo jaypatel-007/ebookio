@@ -39,6 +39,7 @@
     <EntitySetMapping Name="tbl_book">
       <EntityTypeMapping TypeName="ebookioModel.tbl_book">
         <MappingFragment StoreEntitySet="tbl_book">
+          <ScalarProperty Name="category_id" ColumnName="category_id" />
           <ScalarProperty Name="upload_pdf" ColumnName="upload_pdf" />
           <ScalarProperty Name="is_free" ColumnName="is_free" />
           <ScalarProperty Name="language_id" ColumnName="language_id" />
@@ -52,6 +53,14 @@
           <ScalarProperty Name="isbn" ColumnName="isbn" />
           <ScalarProperty Name="book_title" ColumnName="book_title" />
           <ScalarProperty Name="book_id" ColumnName="book_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_category">
+      <EntityTypeMapping TypeName="ebookioModel.tbl_category">
+        <MappingFragment StoreEntitySet="tbl_category">
+          <ScalarProperty Name="category_name" ColumnName="category_name" />
+          <ScalarProperty Name="category_id" ColumnName="category_id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

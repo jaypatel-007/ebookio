@@ -1,0 +1,199 @@
+﻿@model Ebookio.Models.tbl_book
+@{
+    ViewBag.Title = "EditBook";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Book</h4>
+                @if (@TempData["bookuse"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["bookuse"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (@TempData["isbnuse"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["isbnuse"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @using (Html.BeginForm("EditBook", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.HiddenFor(x => x.book_id)
+                    <div class="outer">
+                        <div class="outer">
+                            @if (Session["isfree"].ToString() == "free")
+                            {
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.is_free)
+                                    <input type="text" id="is_free" name="is_free" value=@Session["isfree"] class="form-control" disabled>
+                                    @Html.ValidationMessageFor(model => model.is_free, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.book_title)
+                                    @Html.TextBoxFor(model => model.book_title, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.book_title, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.isbn)
+                                    @Html.TextBoxFor(model => model.isbn, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.isbn, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.publish_date)
+                                    @Html.TextBoxFor(model => model.publish_date, new { @class = "form-control datetimepicker" })
+                                    @Html.ValidationMessageFor(model => model.publish_date, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.no_of_pages)
+                                    <input type="number" name="no_of_pages" class="form-control" value=@Session["pagno"] />
+                                    @Html.ValidationMessageFor(model => model.no_of_pages, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.publisher_id)
+                                    @Html.DropDownListFor(model => model.publisher_id, ViewBag.Publisherlist as SelectList, "Select Publisher", new { @class = "form-select" })
+                                    @Html.ValidationMessageFor(model => model.publisher_id, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.author_id)
+                                    @Html.DropDownListFor(model => model.author_id, ViewBag.Authorlist as SelectList, "Select Author", new { @class = "form-select" })
+                                    @Html.ValidationMessageFor(model => model.author_id, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.language_id)
+                                    @Html.DropDownListFor(model => model.language_id, ViewBag.Lanlist as SelectList, "Select Language", new { @class = "form-select" })
+                                    @Html.ValidationMessageFor(model => model.language_id, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.category_id)
+                                    @Html.DropDownListFor(model => model.category_id, ViewBag.catlist as SelectList, "Select Category", new { @class = "form-select" })
+                                    @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.cover_image)
+                                    <img src="@Url.Content(@Session["cimage"].ToString()) " height="100px" width="100px" />
+                                    <br>
+                                    <input type="file" class="form-control" name="file" id="file" />
+                                    @{ if (@ViewBag.format != null)
+                                        {
+                                            <span class="text-danger"> @ViewBag.format </span> } }
+                                    @{ if (@ViewBag.size != null)
+                                        {
+                                            <span class="text-danger"> @ViewBag.size </span>
+                                        }
+                                    }
+                                </div>
+                                <div class="mb-3" id="showpdf">
+                                    @Html.LabelFor(model => model.upload_pdf)
+                                    <label>@Session["pdfu"]</label>
+                                    <input type="file" name="Pdffile" class="form-control" />
+                                    @{ if (@ViewBag.pdfr != null)
+                                        {
+                                            <span class="text-danger"> @ViewBag.pdfr </span> } }
+                                    @{ if (@ViewBag.pdfformat != null)
+                                        {
+                                            <span class="text-danger"> @ViewBag.pdfformat </span> } }
+                                    @{ if (@ViewBag.pdfsize != null)
+                                        {
+                                            <span class="text-danger"> @ViewBag.pdfsize </span> } }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.is_free)
+                                    <input type="text" id="is_free" name="is_free" value=@Session["isfree"] class="form-control" disabled>
+                                    @Html.ValidationMessageFor(model => model.is_free, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.book_title)
+                                    @Html.TextBoxFor(model => model.book_title, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.book_title, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.isbn)
+                                    @Html.TextBoxFor(model => model.isbn, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.isbn, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.publish_date)
+                                    @Html.TextBoxFor(model => model.publish_date, new { @class = "form-control datetimepicker" })
+                                    @Html.ValidationMessageFor(model => model.publish_date, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.no_of_pages)
+                                    <input type="number" name="no_of_pages" class="form-control" value=@Session["pagno"] />
+                                    @Html.ValidationMessageFor(model => model.no_of_pages, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.publisher_id)
+                                    @Html.DropDownListFor(model => model.publisher_id, ViewBag.Publisherlist as SelectList, "Select Publisher", new { @class = "form-select" })
+                                    @Html.ValidationMessageFor(model => model.publisher_id, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.author_id)
+                                    @Html.DropDownListFor(model => model.author_id, ViewBag.Authorlist as SelectList, "Select Author", new { @class = "form-select" })
+                                    @Html.ValidationMessageFor(model => model.author_id, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.language_id)
+                                    @Html.DropDownListFor(model => model.language_id, ViewBag.Lanlist as SelectList, "Select Language", new { @class = "form-select" })
+                                    @Html.ValidationMessageFor(model => model.language_id, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.category_id)
+                                    @Html.DropDownListFor(model => model.category_id, ViewBag.catlist as SelectList, "Select Category", new { @class = "form-select" })
+                                    @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.cover_image)
+                                    <img src="@Url.Content(Session["cimage"].ToString()) " height="100px" width="100px" />
+                                    <br>
+                                    <input type="file" class="form-control" name="file" id="file" />
+                                    @{ if (@ViewBag.format != null)
+                                        {
+                                            <span class="text-danger"> @ViewBag.format </span> } }
+                                    @{ if (@ViewBag.size != null)
+                                        {
+                                            <span class="text-danger"> @ViewBag.size </span>
+                                        }
+                                    }
+                                </div>
+                                <div class="mb-3" id="showrealprice">
+                                    @Html.LabelFor(model => model.real_price)
+                                    @Html.TextBoxFor(model => model.real_price, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.real_price, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="mb-3" id="showsellprice">
+                                    @Html.LabelFor(model => model.sell_price)
+                                    @Html.TextBoxFor(model => model.sell_price, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.sell_price, "", new { @class = "text-danger" })
+                                </div>
+                            }
+                            <button type="submit" class="btn btn-primary">SUBMIT</button>
+                            <a href="/Admin/Book">
+                                <button type="button" class="btn btn-primary">RESET</button>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/assets/libs/jquery/jquery.min.js"></script>
+<script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/libs/metismenu/metisMenu.min.js"></script>
+<script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="~/assets/libs/node-waves/waves.min.js"></script>
+

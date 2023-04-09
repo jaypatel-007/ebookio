@@ -13,6 +13,8 @@
         <AssociationConnector Association="ebookioModel.FK_tbl_book_tbl_author" />
         <AssociationConnector Association="ebookioModel.FK_tbl_book_tbl_language" />
         <AssociationConnector Association="ebookioModel.FK_tbl_book_tbl_publisher" />
+        <EntityTypeShape EntityType="ebookioModel.tbl_category" Width="1.5" PointX="0.75" PointY="6.75" />
+        <AssociationConnector Association="ebookioModel.FK_tbl_book_tbl_category" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

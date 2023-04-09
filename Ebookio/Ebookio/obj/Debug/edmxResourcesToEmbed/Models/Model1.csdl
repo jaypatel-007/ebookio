@@ -36,6 +36,11 @@
       <End Role="tbl_publisher" EntitySet="tbl_publisher" />
       <End Role="tbl_book" EntitySet="tbl_book" />
     </AssociationSet>
+    <EntitySet Name="tbl_category" EntityType="ebookioModel.tbl_category" />
+    <AssociationSet Name="FK_tbl_book_tbl_category" Association="ebookioModel.FK_tbl_book_tbl_category">
+      <End Role="tbl_category" EntitySet="tbl_category" />
+      <End Role="tbl_book" EntitySet="tbl_book" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="tbl_language">
     <Key>
@@ -59,7 +64,7 @@
     </Key>
     <Property Name="book_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="book_title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="isbn" Type="String" />
+    <Property Name="isbn" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
     <Property Name="no_of_pages" Type="Int32" />
     <Property Name="publish_date" Type="DateTime" Precision="0" />
     <Property Name="real_price" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -73,6 +78,8 @@
     <NavigationProperty Name="tbl_author" Relationship="ebookioModel.FK_tbl_book_tbl_author" FromRole="tbl_book" ToRole="tbl_author" />
     <NavigationProperty Name="tbl_language" Relationship="ebookioModel.FK_tbl_book_tbl_language" FromRole="tbl_book" ToRole="tbl_language" />
     <NavigationProperty Name="tbl_publisher" Relationship="ebookioModel.FK_tbl_book_tbl_publisher" FromRole="tbl_book" ToRole="tbl_publisher" />
+    <Property Name="category_id" Type="Int32" />
+    <NavigationProperty Name="tbl_category" Relationship="ebookioModel.FK_tbl_book_tbl_category" FromRole="tbl_book" ToRole="tbl_category" />
   </EntityType>
   <Association Name="FK_tbl_book_tbl_author">
     <End Type="ebookioModel.tbl_author" Role="tbl_author" Multiplicity="0..1" />
@@ -107,6 +114,26 @@
       </Principal>
       <Dependent Role="tbl_book">
         <PropertyRef Name="publisher_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="tbl_category">
+    <Key>
+      <PropertyRef Name="category_id" />
+    </Key>
+    <Property Name="category_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="category_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="tbl_book" Relationship="ebookioModel.FK_tbl_book_tbl_category" FromRole="tbl_category" ToRole="tbl_book" />
+  </EntityType>
+  <Association Name="FK_tbl_book_tbl_category">
+    <End Type="ebookioModel.tbl_category" Role="tbl_category" Multiplicity="0..1" />
+    <End Type="ebookioModel.tbl_book" Role="tbl_book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_category">
+        <PropertyRef Name="category_id" />
+      </Principal>
+      <Dependent Role="tbl_book">
+        <PropertyRef Name="category_id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

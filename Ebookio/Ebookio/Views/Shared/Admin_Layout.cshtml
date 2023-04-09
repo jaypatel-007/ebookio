@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="~/assets/images/favicon.ico">
     <!-- Bootstrap Css -->
     <link href="~/assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <!-- Icons Css -->
     <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <!-- App Css-->
@@ -196,10 +197,11 @@
                         </a>
                     </li>
 
+
                     <li>
-                        <a href="/Admin/Book" class="waves-effect">
+                        <a href="/Admin/Category" class="waves-effect">
                             <i class="bx bx-book"></i>
-                            <span key="t-chat">Book</span>
+                            <span key="t-chat">Category</span>
                         </a>
                     </li>
 
@@ -207,6 +209,13 @@
                         <a href="/Admin/Language" class="waves-effect">
                             <i class="bx bx-wrench"></i>
                             <span key="t-chat">Language</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/Admin/Book" class="waves-effect">
+                            <i class="bx bx-book"></i>
+                            <span key="t-chat">Book</span>
                         </a>
                     </li>
 
@@ -238,6 +247,14 @@
             </div>
         </div>
     </footer>
+
+
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/CustomeScript.js"></script>
     <script>
         function removediv() {
             document.getElementById("alert").style.visibility = "hidden";

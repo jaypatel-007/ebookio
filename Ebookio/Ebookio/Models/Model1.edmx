@@ -34,11 +34,19 @@
           <Property Name="real_price" Type="varchar" MaxLength="50" />
           <Property Name="sell_price" Type="varchar" MaxLength="50" />
           <Property Name="cover_image" Type="varchar(max)" />
+          <Property Name="category_id" Type="int" />
           <Property Name="publisher_id" Type="int" />
           <Property Name="author_id" Type="int" />
           <Property Name="language_id" Type="int" />
           <Property Name="is_free" Type="varchar" MaxLength="50" />
           <Property Name="upload_pdf" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="tbl_category">
+          <Key>
+            <PropertyRef Name="category_id" />
+          </Key>
+          <Property Name="category_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="category_name" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="tbl_language">
           <Key>
@@ -63,6 +71,18 @@
             </Principal>
             <Dependent Role="tbl_book">
               <PropertyRef Name="author_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_book_tbl_category">
+          <End Role="tbl_category" Type="Self.tbl_category" Multiplicity="0..1" />
+          <End Role="tbl_book" Type="Self.tbl_book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_category">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="tbl_book">
+              <PropertyRef Name="category_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -94,10 +114,15 @@
           <EntitySet Name="tbl_admin" EntityType="Self.tbl_admin" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_author" EntityType="Self.tbl_author" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_book" EntityType="Self.tbl_book" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_category" EntityType="Self.tbl_category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_language" EntityType="Self.tbl_language" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_publisher" EntityType="Self.tbl_publisher" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_tbl_book_tbl_author" Association="Self.FK_tbl_book_tbl_author">
             <End Role="tbl_author" EntitySet="tbl_author" />
+            <End Role="tbl_book" EntitySet="tbl_book" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_book_tbl_category" Association="Self.FK_tbl_book_tbl_category">
+            <End Role="tbl_category" EntitySet="tbl_category" />
             <End Role="tbl_book" EntitySet="tbl_book" />
           </AssociationSet>
           <AssociationSet Name="FK_tbl_book_tbl_language" Association="Self.FK_tbl_book_tbl_language">
@@ -149,6 +174,11 @@
             <End Role="tbl_publisher" EntitySet="tbl_publisher" />
             <End Role="tbl_book" EntitySet="tbl_book" />
           </AssociationSet>
+          <EntitySet Name="tbl_category" EntityType="ebookioModel.tbl_category" />
+          <AssociationSet Name="FK_tbl_book_tbl_category" Association="ebookioModel.FK_tbl_book_tbl_category">
+            <End Role="tbl_category" EntitySet="tbl_category" />
+            <End Role="tbl_book" EntitySet="tbl_book" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="tbl_language">
           <Key>
@@ -172,7 +202,7 @@
           </Key>
           <Property Name="book_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="book_title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="isbn" Type="String" />
+          <Property Name="isbn" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
           <Property Name="no_of_pages" Type="Int32" />
           <Property Name="publish_date" Type="DateTime" Precision="0" />
           <Property Name="real_price" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -186,6 +216,8 @@
           <NavigationProperty Name="tbl_author" Relationship="ebookioModel.FK_tbl_book_tbl_author" FromRole="tbl_book" ToRole="tbl_author" />
           <NavigationProperty Name="tbl_language" Relationship="ebookioModel.FK_tbl_book_tbl_language" FromRole="tbl_book" ToRole="tbl_language" />
           <NavigationProperty Name="tbl_publisher" Relationship="ebookioModel.FK_tbl_book_tbl_publisher" FromRole="tbl_book" ToRole="tbl_publisher" />
+          <Property Name="category_id" Type="Int32" />
+          <NavigationProperty Name="tbl_category" Relationship="ebookioModel.FK_tbl_book_tbl_category" FromRole="tbl_book" ToRole="tbl_category" />
         </EntityType>
         <Association Name="FK_tbl_book_tbl_author">
           <End Type="ebookioModel.tbl_author" Role="tbl_author" Multiplicity="0..1" />
@@ -220,6 +252,26 @@
             </Principal>
             <Dependent Role="tbl_book">
               <PropertyRef Name="publisher_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tbl_category">
+          <Key>
+            <PropertyRef Name="category_id" />
+          </Key>
+          <Property Name="category_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="category_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_book" Relationship="ebookioModel.FK_tbl_book_tbl_category" FromRole="tbl_category" ToRole="tbl_book" />
+        </EntityType>
+        <Association Name="FK_tbl_book_tbl_category">
+          <End Type="ebookioModel.tbl_category" Role="tbl_category" Multiplicity="0..1" />
+          <End Type="ebookioModel.tbl_book" Role="tbl_book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_category">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="tbl_book">
+              <PropertyRef Name="category_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -267,6 +319,7 @@
           <EntitySetMapping Name="tbl_book">
             <EntityTypeMapping TypeName="ebookioModel.tbl_book">
               <MappingFragment StoreEntitySet="tbl_book">
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
                 <ScalarProperty Name="upload_pdf" ColumnName="upload_pdf" />
                 <ScalarProperty Name="is_free" ColumnName="is_free" />
                 <ScalarProperty Name="language_id" ColumnName="language_id" />
@@ -280,6 +333,14 @@
                 <ScalarProperty Name="isbn" ColumnName="isbn" />
                 <ScalarProperty Name="book_title" ColumnName="book_title" />
                 <ScalarProperty Name="book_id" ColumnName="book_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_category">
+            <EntityTypeMapping TypeName="ebookioModel.tbl_category">
+              <MappingFragment StoreEntitySet="tbl_category">
+                <ScalarProperty Name="category_name" ColumnName="category_name" />
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -453,8 +453,130 @@ namespace Ebookio.Controllers
             }
 
         }
+        //--------------------------------------------------------------------------------------------
+        //----------------------------------------------Category--------------------------------------
+        //--------------------------------------------------------------------------------------------
 
+        public ActionResult Category()
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                ViewBag.msg = TempData["msg"] as string;
+                using (var ctx = new ebookioEntities())
+                {
+                    var categorylist = ctx.tbl_category.SqlQuery("Select * from tbl_category").ToList<tbl_category>();
+                    return View(categorylist);
 
+                }
+            }
+        }
+        public ActionResult AddCategory()
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                return View();
+            }
+
+        }
+        [HttpPost]
+        public ActionResult AddCategory(tbl_category cmodel)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                if (ModelState.IsValid == true)
+                {
+                    tbl_category c = new tbl_category();
+                    if (eobj.tbl_category.Any(model => model.category_name.Equals(cmodel.category_name)))
+                    {
+                        TempData["categoryuse"] = "Category Name Already Use..!!";
+                    }
+                    else
+                    {
+                        c.category_name = cmodel.category_name;
+                        eobj.tbl_category.Add(c);
+                        eobj.SaveChanges();
+                        TempData["msg"] = "Successfuly Inserted !!!";
+                        return RedirectToAction("Category");
+                    }
+                }
+                return View();
+            }
+
+        }
+
+        public ActionResult DeleteCategory(int deleteid)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                var deleterecord = eobj.tbl_category.Where(x => x.category_id == deleteid).First();
+                eobj.tbl_category.Remove(deleterecord);
+                eobj.SaveChanges();
+                TempData["msg"] = "Successfuly Deleted !!!";
+                return RedirectToAction("Category");
+            }
+
+        }
+        public ActionResult EditCategory(int category_id)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                var row = eobj.tbl_category.Where(x => x.category_id == category_id).FirstOrDefault();
+                ViewBag.category_name = row.category_name;
+                return View(row);
+            }
+
+        }
+
+        [HttpPost]
+        public ActionResult EditCategory(tbl_category cmodel)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                if (ModelState.IsValid == true)
+                {
+                    if (eobj.tbl_category.Any(model => model.category_name.Equals(cmodel.category_name)))
+                    {
+                        TempData["categoryuse"] = "Category Name Already Use..!!";
+                    }
+                    else
+                    {
+                        tbl_category c = new tbl_category();
+                        c.category_id = cmodel.category_id;
+                        c.category_name = cmodel.category_name;
+                        eobj.Entry(c).State = EntityState.Modified;
+                        eobj.SaveChanges();
+                        TempData["msg"] = "Successfuly Updated !!!";
+                        return RedirectToAction("Category");
+                    }
+                }
+                return View();
+            }
+
+        }
         //--------------------------------------------------------------------------------------------
         //----------------------------------------------Book--------------------------------------
         //--------------------------------------------------------------------------------------------
@@ -483,12 +605,16 @@ namespace Ebookio.Controllers
 
             var lanlist = eobj.tbl_language.ToList();
             ViewBag.Lanlist = new SelectList(lanlist, "language_id", "language_name");
+
+            var catlist = eobj.tbl_category.ToList();
+            ViewBag.catlist = new SelectList(catlist, "category_id", "category_name");
+
             return View();
 
         }
 
         [HttpPost]
-        public ActionResult AddBook(tbl_book bmodel)
+        public ActionResult AddBook(HttpPostedFileBase file, HttpPostedFileBase Pdffile, tbl_book bmodel)
         {
             if (Session["admin_username"] == null)
             {
@@ -496,113 +622,463 @@ namespace Ebookio.Controllers
             }
             else
             {
-
                 if (ModelState.IsValid == true)
                 {
-                    if (eobj.tbl_book.Any(model => model.book_title.Equals(bmodel.book_title)))
+                    tbl_book b = new tbl_book();
+
+                    if (bmodel.is_free=="paid")
                     {
-                        TempData["bookuse"] = "Book Name Already Use..!!";
-                    }
-                    if (eobj.tbl_book.Any(model => model.isbn.Equals(bmodel.isbn)))
-                    {
-                        TempData["isbnuse"] = "ISBN - 13 Already Use..!!";
+                        if(bmodel.real_price==null)
+                        {
+                            ViewBag.realprice = "please Enter Real Price !! ";
+                        }
+                        if(bmodel.sell_price==null)
+                        {
+                            ViewBag.sellprice =  "please Enter Sell Price !! ";
+                        }
+                        else
+                        {
+                            
+                            if (eobj.tbl_book.Any(model => model.book_title.Equals(bmodel.book_title)))
+                            {
+                                TempData["bookuse"] = "Book Name Already Use..!!";
+                            }
+                            if (eobj.tbl_book.Any(model => model.isbn.Equals(bmodel.isbn)))
+                            {
+                                TempData["isbnuse"] = "ISBN number Already Use..!!";
+                            }
+                            else
+                            {
+                                b.is_free = bmodel.is_free;
+                                b.book_title = bmodel.book_title;
+                                b.isbn = bmodel.isbn;
+                                b.publish_date = bmodel.publish_date;
+                                b.no_of_pages = bmodel.no_of_pages;
+                                b.publisher_id = bmodel.publisher_id;
+                                b.author_id = bmodel.author_id;
+                                b.language_id = bmodel.language_id;
+                                b.category_id = bmodel.category_id;
+                                b.real_price = bmodel.real_price;
+                                b.sell_price = bmodel.sell_price;
+
+                                string filename = Path.GetFileName(file.FileName);
+                                string _filename = DateTime.Now.ToString("yymmssff") + filename;
+                                string extension = Path.GetExtension(file.FileName);
+                                string path = Path.Combine(Server.MapPath("~/Document/Image/"), _filename);
+                                bmodel.cover_image = "~/Document/Image/" + _filename;
+
+                                if (extension.ToLower() == ".jpg" || extension.ToLower() == ".jpeg" || extension.ToLower() == ".png")
+                                {
+                                    if (file.ContentLength <= 1000000)
+                                    {
+                                        b.cover_image = bmodel.cover_image;
+                                        file.SaveAs(path);
+                                        eobj.tbl_book.Add(bmodel);
+                                    }
+                                    else
+                                    {
+                                        ViewBag.size = "Select image Size big";
+                                        ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                        ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                        ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                        ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                        return View();
+                                    }
+                                }
+                                else
+                                {
+                                    ViewBag.format = "Select Only PNG,JPEG,JPG Format";
+                                    ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                    ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                    ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                    ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                    return View();
+                                }
+                                if (eobj.SaveChanges() > 0)
+                                {
+                                    TempData["msg"] = "Successfuly Inserted !!!";
+                                    return RedirectToAction("Book");
+                                }
+                            }
+                        }
                     }
                     else
                     {
-                        tbl_book b = new tbl_book();
-                        b.is_free = bmodel.is_free;
-                        b.book_title = bmodel.book_title;
-                        b.isbn = bmodel.isbn;
-                        b.publish_date = bmodel.publish_date;
-                        b.no_of_pages = bmodel.no_of_pages;
-                        b.publisher_id = bmodel.publisher_id;
-                        b.author_id = bmodel.author_id;
-                        b.language_id = bmodel.language_id;
 
-                        //-------start Image Upload-------
+                            if (eobj.tbl_book.Any(model => model.book_title.Equals(bmodel.book_title)))
+                            {
+                                TempData["bookuse"] = "Book Name Already Use..!!";
+                            }
+                            if (eobj.tbl_book.Any(model => model.isbn.Equals(bmodel.isbn)))
+                            {
+                                TempData["isbnuse"] = "ISBN number Already Use..!!";
+                            }
+                            else
+                            {
+                                b.is_free = bmodel.is_free;
+                                b.book_title = bmodel.book_title;
+                                b.isbn = bmodel.isbn;
+                                b.publish_date = bmodel.publish_date;
+                                b.no_of_pages = bmodel.no_of_pages;
+                                b.publisher_id = bmodel.publisher_id;
+                                b.author_id = bmodel.author_id;
+                                b.language_id = bmodel.language_id;
+                                b.category_id = bmodel.category_id;
 
-                        string imgname = Path.GetFileNameWithoutExtension(bmodel.ImageUpload.FileName);
-                        string ext = Path.GetExtension(bmodel.ImageUpload.FileName);
-                        HttpPostedFileBase image_new = bmodel.ImageUpload;
+                                string filename = Path.GetFileName(file.FileName);
+                                string _filename = DateTime.Now.ToString("yymmssff") + filename;
+                                string extension = Path.GetExtension(file.FileName);
+                                string path = Path.Combine(Server.MapPath("~/Document/Image/"), _filename);
+                                bmodel.cover_image = "~/Document/Image/" + _filename;
 
-                        if (ext.ToLower() == ".jpg" || ext.ToLower() == ".png" || ext.ToLower() == ".jpeg")
-                        {
-                            imgname += ext;
-                            bmodel.cover_image = "~/Document/Image/" + imgname;
-                            imgname = Path.Combine(Server.MapPath("~/Document/Image/") + imgname);
-                            bmodel.ImageUpload.SaveAs(imgname);
-                        }
-                        else
-                        {
-                            ViewBag.format = "Select Only PNG,JPEG,JPG Format";
+                                if (extension.ToLower() == ".jpg" || extension.ToLower() == ".jpeg" || extension.ToLower() == ".png")
+                                {
+                                    if (file.ContentLength <= 1000000)
+                                    {
+                                        b.cover_image = bmodel.cover_image;
+                                        file.SaveAs(path);
+                                       // eobj.tbl_book.Add(bmodel);
+                                    }
+                                    else
+                                    {
+                                        ViewBag.size = "Select image Size big";
+                                        ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                        ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                        ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                        ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                        return View();
+                                    }
+                                }
+                                else
+                                {
+                                    ViewBag.format = "Select Only PNG,JPEG,JPG Format";
+                                    ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                    ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                    ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                    ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                    return View();
+                                }
+                                //pdf
+                                string pdffilename = Path.GetFileName(Pdffile.FileName);
+                                string _pdffilename = DateTime.Now.ToString("yymmssff") + pdffilename;
+                                string pdfextension = Path.GetExtension(Pdffile.FileName);
+                                string pdfpath = Path.Combine(Server.MapPath("~/Document/Pdf/"), _pdffilename);
+                                bmodel.upload_pdf = "~/Document/Pdf/" + _pdffilename;
 
-                            ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                if (pdfextension.ToLower() == ".pdf")
+                                {
+                                    if (Pdffile.ContentLength <= 1000000)
+                                    {
+                                        b.upload_pdf = bmodel.upload_pdf;
+                                        Pdffile.SaveAs(pdfpath);
+                                       // eobj.tbl_book.Add(bmodel);
+                                    }
+                                    else
+                                    {
+                                        ViewBag.pdfsize = "Select Pdf Size big";
+                                        ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                        ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                        ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                        ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                        return View();
+                                    }
+                                }
+                                else
+                                {
+                                    ViewBag.pdfformat = "Select Only PNG,JPEG,JPG Format";
+                                    ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                    ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                    ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                    ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                    return View();
+                                }
+                                eobj.tbl_book.Add(bmodel);
+                                if (eobj.SaveChanges() > 0)
+                                {
+                                    TempData["msg"] = "Successfuly Inserted !!!";
+                                    return RedirectToAction("Book");
+                                }
+                            }
 
-                            ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
-
-                            ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
-
-                            return View();
-
-                        }
-
-                       
-
-                        //---------End Image Upload----
-
-                        b.real_price = bmodel.real_price;
-                        b.sell_price = bmodel.sell_price;
-
-                        //-------start Pdf Upload-------
-
-                        string filename = Path.GetFileNameWithoutExtension(bmodel.PdfUpload.FileName);
-                        string extension = Path.GetExtension(bmodel.PdfUpload.FileName);
-
-                        HttpPostedFileBase pdf_new = bmodel.PdfUpload;
-
-                        if (extension.ToLower() == ".pdf")
-                        {
-                            filename += extension;
-                            bmodel.upload_pdf = "~/Document/Pdf/" + filename;
-                            filename = Path.Combine(Server.MapPath("~/Document/Pdf/") + filename);
-                            bmodel.PdfUpload.SaveAs(filename);
-                        }
-                        else
-                        {
-                            ViewBag.pdfformat = "Select Only PDF Format";
-
-                            ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
-
-                            ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
-
-                            ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
-
-                            return View();
-                        }
-                        //------End pdf Upload------
-
-                        b.cover_image = bmodel.cover_image;
-                        b.upload_pdf = bmodel.upload_pdf;
-
-                        eobj.tbl_book.Add(b);
-                        eobj.SaveChanges();
-                        TempData["msg"] = "Successfully Inserted !!!";
-
-                        return RedirectToAction("Book");
                     }
+                    
                 }
+                var publisherlist = eobj.tbl_publisher.ToList();
+                ViewBag.Publisherlist = new SelectList(publisherlist, "publisher_id", "publisher_name");
+
+                var authorlist = eobj.tbl_author.ToList();
+                ViewBag.Authorlist = new SelectList(authorlist, "author_id", "author_name");
+
+                var lanlist = eobj.tbl_language.ToList();
+                ViewBag.Lanlist = new SelectList(lanlist, "language_id", "language_name");
+
+                var catlist = eobj.tbl_category.ToList();
+                ViewBag.catlist = new SelectList(catlist, "category_id", "category_name");
+
+                return View();
             }
-            var publisherlist = eobj.tbl_publisher.ToList();
-            ViewBag.Publisherlist = new SelectList(publisherlist, "publisher_id", "publisher_name");
 
-            var authorlist = eobj.tbl_author.ToList();
-            ViewBag.Authorlist = new SelectList(authorlist, "author_id", "author_name");
+        }
+        public ActionResult EditBook(int book_id)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                var row = eobj.tbl_book.Where(x => x.book_id == book_id).FirstOrDefault();
+                Session["isfree"] = row.is_free;
+                Session["pagno"] = row.no_of_pages;
+                Session["cimage"] = row.cover_image;
+                Session["pdfu"] = row.upload_pdf;
 
-            var lanlist = eobj.tbl_language.ToList();
-            ViewBag.Lanlist = new SelectList(lanlist, "language_id", "language_name");
 
-            //return RedirectToAction("AddBook");
-            return View();
+                var publisherlist = eobj.tbl_publisher.ToList();
+                ViewBag.Publisherlist = new SelectList(publisherlist, "publisher_id", "publisher_name");
+
+                var authorlist = eobj.tbl_author.ToList();
+                ViewBag.Authorlist = new SelectList(authorlist, "author_id", "author_name");
+
+                var lanlist = eobj.tbl_language.ToList();
+                ViewBag.Lanlist = new SelectList(lanlist, "language_id", "language_name");
+
+                var catlist = eobj.tbl_category.ToList();
+                ViewBag.catlist = new SelectList(catlist, "category_id", "category_name");
+
+                return View(row);
+            }
+        }
+        [HttpPost]
+        public ActionResult EditBook(HttpPostedFileBase file, HttpPostedFileBase Pdffile, tbl_book bmodel)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                if (ModelState.IsValid == true)
+                {
+                    if (Session["isfree"].ToString() == "paid")
+                    {
+                        if (file != null)
+                        {
+                            string filename = Path.GetFileName(file.FileName);
+                            string _filename = DateTime.Now.ToString("yymmssff") + filename;
+                            string extension = Path.GetExtension(file.FileName);
+                            string path = Path.Combine(Server.MapPath("~/Document/Image/"), _filename);
+                            bmodel.cover_image = "~/Document/Image/" + _filename;
+
+                            if (extension.ToLower() == ".jpg" || extension.ToLower() == ".jpeg" || extension.ToLower() == ".png")
+                            {
+                                if (file.ContentLength <= 1000000)
+                                {
+                                    bmodel.is_free = Session["isfree"].ToString();
+                                    eobj.Entry(bmodel).State = EntityState.Modified;
+
+                                    string oldimagepath = Request.MapPath(Session["cimage"].ToString());
+
+                                    if (eobj.SaveChanges() > 0)
+                                    {
+                                        file.SaveAs(path);
+                                        if (System.IO.File.Exists(oldimagepath))
+                                        {
+                                            System.IO.File.Delete(oldimagepath);
+                                        }
+                                        TempData["msg"] = "Successfuly Updated !!!";
+                                        return RedirectToAction("Book");
+                                    }
+                                }
+                                else
+                                {
+                                    ViewBag.size = "Select image Size big";
+                                    ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                    ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                    ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                    ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                    return View();
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.format = "Select Only PNG,JPEG,JPG Format";
+                                ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                return View();
+                            }
+                        }
+
+                        bmodel.cover_image = Session["cimage"].ToString();
+                        bmodel.is_free = Session["isfree"].ToString();
+                        eobj.Entry(bmodel).State = EntityState.Modified;
+                        if (eobj.SaveChanges() > 0)
+                        {
+                            TempData["msg"] = "Successfuly Updated !!!";
+                            return RedirectToAction("Book");
+                        }
+                    }
+                    if (Session["isfree"].ToString() == "free")
+                    {
+                        if (file != null)
+                        {
+                            string filename = Path.GetFileName(file.FileName);
+                            string _filename = DateTime.Now.ToString("yymmssff") + filename;
+                            string extension = Path.GetExtension(file.FileName);
+                            string path = Path.Combine(Server.MapPath("~/Document/Image/"), _filename);
+                            bmodel.cover_image = "~/Document/Image/" + _filename;
+
+                            if (extension.ToLower() == ".jpg" || extension.ToLower() == ".jpeg" || extension.ToLower() == ".png")
+                            {
+                                if (file.ContentLength <= 1000000)
+                                {
+                                    bmodel.is_free = Session["isfree"].ToString();
+                                    bmodel.upload_pdf = Session["pdfu"].ToString();
+                                    eobj.Entry(bmodel).State = EntityState.Modified;
+
+                                    string oldimagepath = Request.MapPath(Session["cimage"].ToString());
+
+                                    if (eobj.SaveChanges() > 0)
+                                    {
+                                        file.SaveAs(path);
+                                        if (System.IO.File.Exists(oldimagepath))
+                                        {
+                                            System.IO.File.Delete(oldimagepath);
+                                        }
+                                        TempData["msg"] = "Successfuly Updated !!!";
+                                        return RedirectToAction("Book");
+                                    }
+                                }
+                                else
+                                {
+                                    ViewBag.size = "Select image Size big";
+                                    ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                    ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                    ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                    ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                    return View();
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.format = "Select Only PNG,JPEG,JPG Format";
+                                ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                return View();
+                            }
+                        }
+                        if (Pdffile != null)
+                        {
+                            string pdffilename = Path.GetFileName(Pdffile.FileName);
+                            string _pdffilename = DateTime.Now.ToString("yymmssff") + pdffilename;
+                            string pdfextension = Path.GetExtension(Pdffile.FileName);
+                            string pdfpath = Path.Combine(Server.MapPath("~/Document/Pdf/"), _pdffilename);
+                            bmodel.upload_pdf = "~/Document/Pdf/" + _pdffilename;
+
+                            if (pdfextension.ToLower() == ".pdf")
+                            {
+                                if (Pdffile.ContentLength <= 1000000)
+                                {
+                                    bmodel.is_free = Session["isfree"].ToString();
+                                    bmodel.cover_image = Session["cimage"].ToString();
+                                    eobj.Entry(bmodel).State = EntityState.Modified;
+
+                                    string oldpdfpath = Request.MapPath(Session["pdfu"].ToString());
+
+                                    if (eobj.SaveChanges() > 0)
+                                    {
+                                        Pdffile.SaveAs(pdfpath);
+                                        if (System.IO.File.Exists(oldpdfpath))
+                                        {
+                                            System.IO.File.Delete(oldpdfpath);
+                                        }
+                                        TempData["msg"] = "Successfuly Updated !!!";
+                                        return RedirectToAction("Book");
+                                    }
+                                }
+                                else
+                                {
+                                    ViewBag.size = "Select Pdf Size big";
+                                    ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                    ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                    ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                    ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                    return View();
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.format = "Select Only Pdf Format";
+                                ViewBag.Publisherlist = new SelectList(eobj.tbl_publisher.ToList(), "publisher_id", "publisher_name");
+                                ViewBag.Authorlist = new SelectList(eobj.tbl_author.ToList(), "author_id", "author_name");
+                                ViewBag.Lanlist = new SelectList(eobj.tbl_language.ToList(), "language_id", "language_name");
+                                ViewBag.catlist = new SelectList(eobj.tbl_category.ToList(), "category_id", "category_name");
+                                return View();
+                            }
+                        }
+
+                        bmodel.cover_image = Session["cimage"].ToString();
+                        bmodel.upload_pdf = Session["pdfu"].ToString();
+                        bmodel.is_free = Session["isfree"].ToString();
+                        eobj.Entry(bmodel).State = EntityState.Modified;
+                        if (eobj.SaveChanges() > 0)
+                        {
+                            TempData["msg"] = "Successfuly Updated !!!";
+                            return RedirectToAction("Book");
+                        }
+                    }
+
+                }
+                var publisherlist = eobj.tbl_publisher.ToList();
+                ViewBag.Publisherlist = new SelectList(publisherlist, "publisher_id", "publisher_name");
+
+                var authorlist = eobj.tbl_author.ToList();
+                ViewBag.Authorlist = new SelectList(authorlist, "author_id", "author_name");
+
+                var lanlist = eobj.tbl_language.ToList();
+                ViewBag.Lanlist = new SelectList(lanlist, "language_id", "language_name");
+
+                var catlist = eobj.tbl_category.ToList();
+                ViewBag.catlist = new SelectList(catlist, "category_id", "category_name");
+
+                return View();
+            }
+
+        }
+        public ActionResult DeleteBook(int deleteid)
+        {
+            if (Session["admin_username"] == null)
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            else
+            {
+                var deleterecord = eobj.tbl_book.Where(x => x.book_id == deleteid).First();
+                string currentImg = Request.MapPath(deleterecord.cover_image);
+                string currentPdf = Request.MapPath(deleterecord.upload_pdf);
+
+                //remove image
+                if (System.IO.File.Exists(currentImg))
+                {
+                    System.IO.File.Delete(currentImg);
+                }
+
+                //remove pdf
+                if (System.IO.File.Exists(currentPdf))
+                {
+                    System.IO.File.Delete(currentPdf);
+                }
+
+                eobj.tbl_book.Remove(deleterecord);
+                eobj.SaveChanges();
+                TempData["msg"] = "Successfuly Deleted !!!";
+                return RedirectToAction("Book");
+            }
+
         }
     }
 }
